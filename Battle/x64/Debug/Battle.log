@@ -1,12 +1,15 @@
-﻿  Controladora.cpp
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.h(2,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
-  (compilando archivo de origen "Controladora.cpp")
-  
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.h(3,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
-  (compilando archivo de origen "Controladora.cpp")
-  
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.h(4,10): warning C4067: símbolos (token) inesperados después de la directiva del preprocesador; se esperaba una nueva línea
-  (compilando archivo de origen "Controladora.cpp")
-  
+﻿  Mapa.cpp
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(234,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(234,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(239,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(239,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(244,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(244,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(249,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(249,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(254,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(254,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(259,82): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+C:\Users\eloy0\Downloads\battle-city-mapa\Mapa.cpp(259,63): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
   Bloque.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
   Battle.vcxproj -> C:\Users\eloy0\Downloads\battle-city-mapa\x64\Debug\Battle.exe

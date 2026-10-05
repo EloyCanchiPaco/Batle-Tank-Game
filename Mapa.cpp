@@ -57,17 +57,17 @@ void CMapa::nivel1(ETipoPiso PisoDeseado) {
 void CMapa::nivel2(ETipoPiso PisoDeseado) {
     this->tipoPiso = PisoDeseado;
     int tmpNivel2[MAX_FILAS][MAX_COLUMNAS] = {
-      1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
-      1, 1, 1, 2, 2, 1, 1, 1, 2, 2, 1, 1, 1,
-      1, 1, 2, 1, 1, 2, 1, 2, 1, 1, 2, 1, 1,
-      1, 1, 2, 1, 1, 1, 2, 1, 1, 1, 2, 1, 1,
-      1, 1, 1, 2, 1, 1, 1, 1, 1, 2, 1, 1, 1,
-      1, 5, 1, 1, 2, 1, 1, 1, 2, 1, 1, 5, 1,
-      1, 5, 1, 1, 1, 2, 1, 2, 1, 1, 1, 5, 1,
-      1, 5, 1, 1, 1, 1, 2, 1, 1, 1, 1, 5, 1,
-      1, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 1,
-      1, 1, 1, 1, 1, 2, 2, 2, 1, 1, 1, 1, 1,
-      1, 1, 1, 1, 1, 2, 9, 2, 1, 1, 1, 1, 1
+        1, 1, 1, 1, 2, 2, 1, 1, 3, 3, 3, 3, 1,
+        3, 3, 1, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1,
+        2, 2, 1, 2, 2, 2, 1, 2, 2, 1, 4, 4, 1,
+        1, 1, 1, 1, 1, 1, 1, 4, 4, 1, 4, 1, 1,
+        2, 2, 2, 1, 4, 2, 1, 4, 4, 1, 2, 2, 1,
+        1, 1, 1, 1, 4, 2, 1, 2, 1, 1, 1, 1, 1,
+        4, 4, 4, 1, 4, 1, 3, 1, 2, 1, 3, 1, 1,
+        1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 3, 2, 2,
+        1, 1, 1, 1, 2, 2, 2, 2, 2, 1, 3, 1, 1,
+        2, 2, 2, 1, 1, 1, 1, 1, 2, 2, 1, 1, 1,
+        2, 2, 1, 1, 1, 1, 2, 9, 2, 1, 1, 1, 1
     };
 
     std::cout << "Inicializando nivel 2\n";
@@ -94,6 +94,48 @@ void CMapa::nivel2(ETipoPiso PisoDeseado) {
         }
     }
 }
+//nivel 3
+void CMapa::nivel3(ETipoPiso PisoDeseado) {
+    this->tipoPiso = PisoDeseado;
+    int tmpNivel3[MAX_FILAS][MAX_COLUMNAS] = {
+    5, 5, 1, 1, 1, 1, 1, 1, 1, 1, 1, 5, 5,
+    5, 1, 1, 2, 2, 1, 2, 1, 2, 2, 1, 1, 5,
+    1, 1, 2, 2, 5, 2, 1, 2, 5, 2, 2, 1, 1,
+    1, 1, 2, 5, 5, 2, 1, 2, 5, 5, 2, 1, 1,
+    5, 1, 2, 2, 2, 2, 2, 2, 2, 2, 2, 1, 5,
+    4, 4, 2, 2, 5, 2, 1, 2, 5, 2, 2, 4, 4,
+    1, 1, 1, 2, 1, 2, 1, 2, 1, 2, 1, 1, 1,
+    3, 3, 1, 1, 2, 1, 2, 1, 2, 1, 1, 3, 3,
+    2, 2, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 2,
+    3, 3, 1, 1, 1, 2, 2, 2, 1, 1, 1, 3, 3,
+    3, 3, 1, 1, 1, 2, 9, 2, 1, 1, 1, 3, 3
+    };
+
+    std::cout << "Inicializando nivel 3\n";
+    for (int i = 0; i < MAX_FILAS; i++) {
+        for (int j = 0; j < MAX_COLUMNAS; j++) {
+            if (tmpNivel3[i][j] == 1) {
+                mapa[i][j] = new CBloque(ETipoBloque::piso, 0);
+            }
+            if (tmpNivel3[i][j] == 2) {
+                mapa[i][j] = new CBloque(ETipoBloque::destruible, 2);
+            }
+            if (tmpNivel3[i][j] == 3) {
+                mapa[i][j] = new CBloque(ETipoBloque::noDestruible, -1);
+            }
+            if (tmpNivel3[i][j] == 4) {
+                mapa[i][j] = new CBloque(ETipoBloque::agua, 0);
+            }
+            if (tmpNivel3[i][j] == 5) {
+                mapa[i][j] = new CBloque(ETipoBloque::arbol, 0);
+            }
+            if (tmpNivel3[i][j] == 9) {
+                mapa[i][j] = new CBloque(ETipoBloque::trofeo, 1);
+            }
+        }
+    }
+}
+
 //nivel 4
 void CMapa::nivel4(ETipoPiso PisoDeseado) {
 	this->tipoPiso = PisoDeseado;
