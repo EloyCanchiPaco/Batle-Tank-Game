@@ -1,0 +1,3 @@
+C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Battle.vcxproj.AssemblyReference.cache
+C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Bomberman.Juego.resources
+C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Battle.vcxproj.GenerateResource.cache
