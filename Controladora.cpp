@@ -7,9 +7,9 @@ CControladora::CControladora() {
 
 void CControladora::Inicializar() {
 	//mapa->nivel1();
-	mapa->nivel2();
-	jugador = new CJugador(1,10,4,3); ;
-	enemigos = new CEnemigo(2, ETipoTanque::tipo1, 0, 7, 1);
+	mapa->nivel4(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	jugador = new CJugador(1, 10, 4, 3); //id, fila de aparicion, columna de aparicion, vidas
+	enemigos = new CEnemigo(2, ETipoTanque::tipo1, 1, 7, 1); //id, tipo, fila de aparicion, columna de aparicion, vidas
 };
 
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {

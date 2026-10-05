@@ -13,6 +13,14 @@ enum ETipoBloque {
 	arbol,
 	trofeo
 };
+//creamos una enumeracion para cambiar de piso 
+enum ETipoPiso {
+	tierraOscura=0,
+	TierraClara =1,
+	pastoLiso=2,
+	pastoDetalles=3,
+	pisoOscuro=4,
+};
 
 enum EDireccion {
 	ninguno,
