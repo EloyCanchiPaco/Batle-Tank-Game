@@ -2,11 +2,11 @@
 #include "Tanque.h"
 
 enum ETipoTanque {
-	tipo1,
-	tipo2,
-	tipo3,
-	tipo4,
-	tipo5
+	tipo1=0,
+	tipo2=4,
+	tipo3=8,
+	tipo4=12,
+	tipo5=16
 };
 
 class CEnemigo: public CTanque {

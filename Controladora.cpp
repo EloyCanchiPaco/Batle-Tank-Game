@@ -1,15 +1,29 @@
 #include "Controladora.h"
-
+#include "EnemigoFactory.h"
 CControladora::CControladora() {
 	mapa = new CMapa();
+	jugador = nullptr;
+	Enemigos = nullptr; 
+	if (trofeo == NULL) {
+		trofeo = new CBloque(ETipoBloque::trofeo,2);
+	}
 
+}
+//
+CControladora::~CControladora() {
+	delete mapa;
+	delete jugador;
+	delete Enemigos;
 }
 
 void CControladora::Inicializar() {
 	//mapa->nivel1();
-	mapa->nivel2(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	mapa->nivel4(ETipoPiso::pastoDetalles); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
 	jugador = new CJugador(1, 10, 4, 3); //id, fila de aparicion, columna de aparicion, vidas
-	enemigos = new CEnemigo(2, ETipoTanque::tipo1, 1, 7, 1); //id, tipo, fila de aparicion, columna de aparicion, vidas
+	Enemigos = new CColeccionEnemigos();
+	Enemigos->Agregar(CEnemigoFactory::CrearEnemigo(ETipoTanque::tipo1, 2, 0, 1));   // fila 0, columna 1
+	Enemigos->Agregar(CEnemigoFactory::CrearEnemigo(ETipoTanque::tipo2, 3, 0, 7));  //id, tipo, fila de aparicion, columna de aparicion, vidas
+
 };
 
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {
@@ -19,5 +33,6 @@ void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques
 //dibujar tanques
 void CControladora::DibujarTanques(Graphics^ g, Bitmap^ bmpTanques) {
 	jugador->dibujar(g, bmpTanques);
-	enemigos->dibujar(g, bmpTanques);
+		Enemigos->dibujar(g, bmpTanques);
+	
 };

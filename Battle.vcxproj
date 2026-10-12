@@ -126,6 +126,8 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Bloque.cpp" />
+    <ClCompile Include="ColeccionEnemigos.cpp" />
+    <ClCompile Include="EnemigoFactory.cpp" />
     <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="Controladora.cpp" />
     <ClCompile Include="Enemigo.cpp" />
@@ -136,7 +138,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Bloque.h" />
+    <ClInclude Include="ColeccionEnemigos.h" />
     <ClInclude Include="Comun.h" />
+    <ClInclude Include="EnemigoFactory.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Controladora.h" />
     <ClInclude Include="Enemigo.h" />

@@ -14,7 +14,6 @@ public:
 	void dibujar(Graphics^ g, Bitmap^ bmpTanques);
 	CJugador(short id, int fila, int columna, int vidas);
 	void mover();
-	//jugador principal
 
 };
 
