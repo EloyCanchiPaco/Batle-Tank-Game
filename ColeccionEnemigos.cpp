@@ -28,4 +28,8 @@ void CColeccionEnemigos::dibujar(Graphics^ g, Bitmap^ bmpTanques) {
     for (CEnemigo* e : enemigos) {
         e->dibujar(g, bmpTanques);
     }
+
+}
+int CColeccionEnemigos::getCantidad() {
+    return (int)enemigos.size();
 }

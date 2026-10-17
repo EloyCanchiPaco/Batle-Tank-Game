@@ -6,7 +6,7 @@ class CColeccionEnemigos {
     std::vector<CEnemigo*> enemigos;
 public:
     ~CColeccionEnemigos();
-    void Agregar(CEnemigo* enemigo);
+    void Agregar(CEnemigo* Enemigo);// arreglar
     void EliminarPorId(short id);
     CEnemigo* getEnemigo(int indice);
     int getCantidad();

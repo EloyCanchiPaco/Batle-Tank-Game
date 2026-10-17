@@ -1,5 +1,5 @@
 #pragma once
-#include "Mapa.h";
+#include "Mapa.h"
 #include "Jugador.h"
 #include "Enemigo.h"
 #include "ColeccionEnemigos.h"
@@ -9,7 +9,7 @@ class CControladora {
 private:
 	CMapa* mapa;
 	CJugador* jugador;
-	CColeccionEnemigos* Enemigos;
+	CColeccionEnemigos* Enemigos;// arreglar
 	CBloque* trofeo;
 public:
 	CControladora();
@@ -18,4 +18,6 @@ public:
 	void Inicializar();
 	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo);
 	void DibujarTanques(Graphics^ g, Bitmap^ bmpTanques);
+	void setDireccion(EDireccion direccion);
+
 };

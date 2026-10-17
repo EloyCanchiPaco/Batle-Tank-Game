@@ -1,13 +1,12 @@
 #include "Controladora.h"
 #include "EnemigoFactory.h"
 CControladora::CControladora() {
+	srand((unsigned)time(nullptr));
 	mapa = new CMapa();
-	jugador = nullptr;
-	Enemigos = nullptr; 
+
 	if (trofeo == NULL) {
 		trofeo = new CBloque(ETipoBloque::trofeo,2);
 	}
-
 }
 //
 CControladora::~CControladora() {
@@ -17,13 +16,38 @@ CControladora::~CControladora() {
 }
 
 void CControladora::Inicializar() {
-	//mapa->nivel1();
-	mapa->nivel4(ETipoPiso::pastoDetalles); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
-	jugador = new CJugador(1, 10, 4, 3); //id, fila de aparicion, columna de aparicion, vidas
+	
+	mapa->nivel5(ETipoPiso::pastoDetalles); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	jugador = new CJugador(1, 12, 4, 3); //id, fila de aparicion, columna de aparicion, vidas
 	Enemigos = new CColeccionEnemigos();
-	Enemigos->Agregar(CEnemigoFactory::CrearEnemigo(ETipoTanque::tipo1, 2, 0, 1));   // fila 0, columna 1
-	Enemigos->Agregar(CEnemigoFactory::CrearEnemigo(ETipoTanque::tipo2, 3, 0, 7));  //id, tipo, fila de aparicion, columna de aparicion, vidas
+	// crear enemigos con for deacuredo al nivel
+	ETipoTanque tipos[] = { tipo1, tipo2, tipo3, tipo4, tipo5 };
+	int nivel = mapa->getNivel();
+	if (nivel < 1) nivel = 1;            // protección si el nivel no se asignó
+	if (nivel > 5) nivel = 5;
+	ETipoTanque tipoNivel = tipos[nivel - 1];
+	int cantidades[] = {4, 5, 6, 7, 8};
+	int cantidad = cantidades[nivel - 1];
 
+	for (int i = 0; i < cantidad; i++) {
+		int fila = -1, columna = -1;
+
+		for (int intento = 0; intento < 500; intento++) {   // límite de intentos
+			int f = rand() % MAX_FILAS;
+			int c = rand() % MAX_COLUMNAS;
+			CBloque* b = mapa->getBloque(f, c);
+
+			if (b != nullptr && b->getTipo() == ETipoBloque::piso) {
+				fila = f;
+				columna = c;
+				break;
+			}
+		}
+
+		if (fila == -1) continue;   // no se encontró celda libre, se omite este enemigo
+
+		Enemigos->Agregar(CEnemigoFactory::CrearEnemigo(tipoNivel, i, fila, columna));
+	}
 };
 
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {
@@ -36,3 +60,6 @@ void CControladora::DibujarTanques(Graphics^ g, Bitmap^ bmpTanques) {
 		Enemigos->dibujar(g, bmpTanques);
 	
 };
+void CControladora::setDireccion(EDireccion direccion) {
+	jugador->setDireccion(direccion);
+}
