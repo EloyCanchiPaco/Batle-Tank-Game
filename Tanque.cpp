@@ -47,4 +47,14 @@ int CTanque::getX() {
 int CTanque::getY() {
 	return this->posY;
 }
+//funcion movimiento usando direccion
+void CTanque::mover() {
 
+	switch (direccion) {
+	case EDireccion::arriba:    posY -= velocidad; break;
+	case EDireccion::abajo:    posY += velocidad; break;
+	case EDireccion::izquierda:    posX -= velocidad; break;
+	case EDireccion::derecha:    posX += velocidad; break;
+	default: break;
+	}
+}

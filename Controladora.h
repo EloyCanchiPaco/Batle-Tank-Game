@@ -19,5 +19,6 @@ public:
 	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo);
 	void DibujarTanques(Graphics^ g, Bitmap^ bmpTanques);
 	void setDireccion(EDireccion direccion);
+	void moverJugador();
 
 };

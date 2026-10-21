@@ -34,6 +34,6 @@ CJugador::CJugador(short id, int fila, int columna, int vidas) :
 }
 
 void CJugador::mover() {
-
+	CTanque::mover();
 }
 

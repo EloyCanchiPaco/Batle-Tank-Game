@@ -104,18 +104,22 @@ namespace Battle {
 		case Keys::Up:
 			std::cout << "Tecla arriba" << std::endl;
 			controladora->setDireccion(EDireccion::arriba);
+			controladora->moverJugador();
 			break;
 		case Keys::Down:
 			std::cout << "Tecla abajo" << std::endl;
 			controladora->setDireccion(EDireccion::abajo);
+			controladora->moverJugador();
 			break;
 		case Keys::Left:
 			std::cout << "Tecla izquierda" << std::endl;
 			controladora->setDireccion(EDireccion::izquierda);
+			controladora->moverJugador();
 			break;
 		case Keys::Right:
 			std::cout << "Tecla derecha" << std::endl;
 			controladora->setDireccion(EDireccion::derecha);
+			controladora->moverJugador();
 			break;
 		default:
 			break;

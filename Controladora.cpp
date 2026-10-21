@@ -1,12 +1,18 @@
 #include "Controladora.h"
 #include "EnemigoFactory.h"
-CControladora::CControladora() {
+CControladora::CControladora() : mapa(nullptr), jugador(nullptr), Enemigos(nullptr), trofeo(nullptr) {
 	srand((unsigned)time(nullptr));
-	mapa = new CMapa();
-
-	if (trofeo == NULL) {
-		trofeo = new CBloque(ETipoBloque::trofeo,2);
+	std::cout << "Mapa: " << mapa << std::endl;
+	if (mapa == nullptr) {
+		mapa = new CMapa();
 	}
+	if (jugador == nullptr) {
+		jugador = new CJugador(1, 4, 10, 3);
+	}
+	if (trofeo == nullptr) {
+		trofeo = new CBloque(ETipoBloque::trofeo, 2);
+	}
+
 }
 //
 CControladora::~CControladora() {
@@ -17,7 +23,7 @@ CControladora::~CControladora() {
 
 void CControladora::Inicializar() {
 	
-	mapa->nivel5(ETipoPiso::pastoDetalles); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	mapa->nivel3(ETipoPiso::pisoOscuro); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
 	jugador = new CJugador(1, 12, 4, 3); //id, fila de aparicion, columna de aparicion, vidas
 	Enemigos = new CColeccionEnemigos();
 	// crear enemigos con for deacuredo al nivel
@@ -63,3 +69,9 @@ void CControladora::DibujarTanques(Graphics^ g, Bitmap^ bmpTanques) {
 void CControladora::setDireccion(EDireccion direccion) {
 	jugador->setDireccion(direccion);
 }
+void CControladora::moverJugador() {
+	jugador->mover();
+}
+
+//hacer mover los enemigos con animacion,poner la posicion rand del enemigo en coleccion de enemigos 
+//practica 5 aplcicar un patron de diseño estructural (bringe,facde,proxy,decorator, flyweight),forzar aplicacion

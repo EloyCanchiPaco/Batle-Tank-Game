@@ -18,7 +18,7 @@ public:
 	void setVelocidad(short velocidad);
 	void setX(int posX);
 	void setY(int posY);
-
+	void mover();
 	short getId();
 	short getVidas();
 	EDireccion getDireccion();
