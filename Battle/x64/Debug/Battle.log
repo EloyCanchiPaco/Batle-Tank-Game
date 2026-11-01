@@ -1,5 +1,3 @@
-﻿  Juego.cpp
-  JuegoFacade.cpp
-  Generando código...
+﻿  EstrategiaJugador.cpp
   Bloque.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
   Battle.vcxproj -> C:\Users\eloy0\Downloads\battle-city-mapa\x64\Debug\Battle.exe

@@ -18,7 +18,7 @@ class CEnemigo: public CTanque {
 	//por aqui se deveria empezar a implementar el patron estrategia
 	// Solo UNO estara asignado a la vez; los demas quedan en nullptr.
 	// //
-	//EstrategiaJugador* ajugador = nullptr;
+	EstrategiaJugador* ajugador = nullptr;
 	EstrategiaAleatoria* aleatorio = nullptr;
 	//EstrategiaTrofeo* atrofeo = nullptr;
 	//EstrategiaVelocidad* mayorVelocidad = nullptr;

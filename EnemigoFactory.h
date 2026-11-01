@@ -8,6 +8,6 @@ enum class EClaseEnemigo {
 
 class CEnemigoFactory {
 public:
-    static CEnemigo* CrearEnemigo(ETipoTanque tipo, short id, int fila, int columna);//static  chequear  
+    static CEnemigo* CrearEnemigo(ETipoTanque tipo, short id, int fila, int columna, CTanque* jugador );//static  chequear  
 };
 

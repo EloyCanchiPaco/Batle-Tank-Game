@@ -13,5 +13,5 @@ public:
     CEnemigo* getEnemigo(int indice);
     int getCantidad();
     void dibujar(Graphics^ g, Bitmap^ bmpTanques);
-    void generarPorNivel(CMapa* mapa, int filaJugador, int columnaJugador);
+    void generarPorNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador);
 };

@@ -1,6 +1,7 @@
 #include "Enemigo.h"
 #include "Bloque.h"
 #include "Mapa.h"
+
 CEnemigo::CEnemigo(short id, short tipo, int fila, int columna, int vidas) : 
 	CTanque(id, columna* ANCHO_IMAGEN, fila* ALTO_IMAGEN, vidas) {
 	this->tipo = (ETipoTanque)tipo;
@@ -10,7 +11,7 @@ CEnemigo::CEnemigo(short id, short tipo, int fila, int columna, int vidas) :
 //descontructor
 CEnemigo::~CEnemigo() {
 	delete aleatorio;
-	//delete ajugador;       // TODO companeros
+	delete ajugador;     
 	//delete atrofeo;
 	//delete mayorVelocidad;
 }
@@ -58,12 +59,12 @@ void CEnemigo::animar() {
 //
 void CEnemigo::setEstrategia(Estrategia* estrategia) {
 	delete aleatorio; aleatorio = nullptr;
-	//delete ajugador;       ajugador = nullptr;        // TODO companeros
+	delete ajugador;       ajugador = nullptr;        // TODO companeros
 	//delete atrofeo;        atrofeo = nullptr;
 	//delete mayorVelocidad; mayorVelocidad = nullptr;
 
 	if ((aleatorio = dynamic_cast<EstrategiaAleatoria*>(estrategia))) return;
-	//if ((ajugador = dynamic_cast<EstrategiaJugador*>(estrategia))) return;
+	if ((ajugador = dynamic_cast<EstrategiaJugador*>(estrategia))) return;
 	//if ((atrofeo = dynamic_cast<EstrategiaTrofeo*>(estrategia))) return;
 	//if ((mayorVelocidad = dynamic_cast<EstrategiaVelocidad*>(estrategia))) return;
 	delete estrategia;
@@ -71,7 +72,7 @@ void CEnemigo::setEstrategia(Estrategia* estrategia) {
 
 void CEnemigo::mover(CMapa* mapa) {
 	if (aleatorio) aleatorio->mover(this, mapa);
-	//else if (ajugador)        ajugador->mover(this, mapa);   // TODO companeros
+	else if (ajugador)        ajugador->mover(this, mapa);   // TODO companeros
 	//else if (atrofeo)         atrofeo->mover(this, mapa);
 	//else if (mayorVelocidad)  mayorVelocidad->mover(this, mapa);
 }

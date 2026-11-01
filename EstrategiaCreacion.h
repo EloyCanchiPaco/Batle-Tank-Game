@@ -2,15 +2,15 @@
 #include "Enemigo.h"
 // ===== PATRON STRATEGY: CREACION DE ENEMIGOS =====
 // Cada estrategia de creacion decide con que estrategia de MOVIMIENTO nace cada tipo de tanque.
-// (Las vidas y velocidades se siguen definiendo en el switch de EnemigoFactory.)
+// Recibe al jugador por si la estrategia de movimiento lo necesita.
 class EstrategiaCreacion {
 public:
 	virtual ~EstrategiaCreacion() {}
-	virtual Estrategia* crearMovimiento() = 0;
+	virtual Estrategia* crearMovimiento(CTanque* jugador) = 0;
 };
 
-class CreacionTipo1 : public EstrategiaCreacion { public: Estrategia* crearMovimiento() override; };
-class CreacionTipo2 : public EstrategiaCreacion { public: Estrategia* crearMovimiento() override; };
-class CreacionTipo3 : public EstrategiaCreacion { public: Estrategia* crearMovimiento() override; };
-class CreacionTipo4 : public EstrategiaCreacion { public: Estrategia* crearMovimiento() override; };
-class CreacionTipo5 : public EstrategiaCreacion { public: Estrategia* crearMovimiento() override; };
+class CreacionTipo1 : public EstrategiaCreacion { public: Estrategia* crearMovimiento(CTanque* jugador) override; };
+class CreacionTipo2 : public EstrategiaCreacion { public: Estrategia* crearMovimiento(CTanque* jugador) override; };
+class CreacionTipo3 : public EstrategiaCreacion { public: Estrategia* crearMovimiento(CTanque* jugador) override; };
+class CreacionTipo4 : public EstrategiaCreacion { public: Estrategia* crearMovimiento(CTanque* jugador) override; };
+class CreacionTipo5 : public EstrategiaCreacion { public: Estrategia* crearMovimiento(CTanque* jugador) override; };

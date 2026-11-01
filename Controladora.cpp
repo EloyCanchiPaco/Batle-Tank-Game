@@ -25,8 +25,7 @@ CControladora::~CControladora() {
 void CControladora::Inicializar() {
 
 	mapa->nivel2(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
-
-	Enemigos->generarPorNivel(mapa, 12, 4);
+	Enemigos->generarPorNivel(mapa, 12, 4, jugador);
 
 }
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {

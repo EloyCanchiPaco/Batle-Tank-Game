@@ -1,7 +1,7 @@
 #include "EnemigoFactory.h"
 #include "EstrategiaCreacion.h"
 
-CEnemigo* CEnemigoFactory::CrearEnemigo(ETipoTanque tipo, short id, int fila, int columna) {
+CEnemigo* CEnemigoFactory::CrearEnemigo(ETipoTanque tipo, short id, int fila, int columna, CTanque* jugador) {
     int vidas = 1;
     short velocidad = 10;
     static CreacionTipo1 t1; static CreacionTipo2 t2; static CreacionTipo3 t3;
@@ -18,6 +18,6 @@ CEnemigo* CEnemigoFactory::CrearEnemigo(ETipoTanque tipo, short id, int fila, in
     CEnemigo* enemigo = new CEnemigo(id, tipo, fila, columna, vidas);
     enemigo->setTipo(tipo);
     enemigo->setVelocidad(velocidad);
-    enemigo->setEstrategia(creacion->crearMovimiento());
+    enemigo->setEstrategia(creacion->crearMovimiento(jugador));
     return enemigo;
 }

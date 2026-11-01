@@ -42,7 +42,7 @@ bool CColeccionEnemigos::hayEnemigoEn(int fila, int columna) {
     }
     return false;
 }
-void CColeccionEnemigos::generarPorNivel(CMapa* mapa, int filaJugador, int columnaJugador) {
+void CColeccionEnemigos::generarPorNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador) {
     ETipoTanque tipos[] = { tipo1, tipo2, tipo3, tipo4, tipo5 };
     int cantidades[] = { 3, 4, 5, 6, 7 };           // enemigos por nivel: aquí se edita
 
@@ -72,6 +72,6 @@ void CColeccionEnemigos::generarPorNivel(CMapa* mapa, int filaJugador, int colum
 
         if (fila == -1) continue;   // no encontró celda libre: omite este enemigo
 
-        Agregar(CEnemigoFactory::CrearEnemigo(tipoNivel, (short)enemigos.size(), fila, columna));
+        Agregar(CEnemigoFactory::CrearEnemigo(tipoNivel, (short)enemigos.size(), fila, columna, jugador));
     }
 }
