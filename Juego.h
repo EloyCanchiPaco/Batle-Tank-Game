@@ -1,5 +1,6 @@
 #pragma once
 #include "Controladora.h"
+#include "JuegoFacade.h"
 
 namespace Battle {
 
@@ -16,6 +17,7 @@ namespace Battle {
 	public ref class Juego : public System::Windows::Forms::Form
 	{
 	public:
+		CJuegoFacade* juego = new CJuegoFacade();
 		CControladora* controladora = new CControladora();
 		Bitmap^ bmpPiso = gcnew Bitmap("imagenes\\pisos.png");
 		Bitmap^ bmpBloques = gcnew Bitmap("imagenes\\bloques.png");
@@ -86,6 +88,7 @@ namespace Battle {
 		}
 #pragma endregion
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
+		controladora->moverEnemigos();
 		Graphics^ g = this->CreateGraphics();
 		BufferedGraphicsContext^ espacio = BufferedGraphicsManager::Current;
 		BufferedGraphics^ buffer = espacio->Allocate(g, this->ClientRectangle);

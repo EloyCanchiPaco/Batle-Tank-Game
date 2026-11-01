@@ -9,7 +9,7 @@ class CControladora {
 private:
 	CMapa* mapa;
 	CJugador* jugador;
-	CColeccionEnemigos* Enemigos;// arreglar
+	CColeccionEnemigos* Enemigos;
 	CBloque* trofeo;
 public:
 	CControladora();
@@ -20,5 +20,7 @@ public:
 	void DibujarTanques(Graphics^ g, Bitmap^ bmpTanques);
 	void setDireccion(EDireccion direccion);
 	void moverJugador();
+	void moverEnemigos();
+
 
 };

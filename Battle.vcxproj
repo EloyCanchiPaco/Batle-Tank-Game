@@ -128,6 +128,12 @@
     <ClCompile Include="Bloque.cpp" />
     <ClCompile Include="ColeccionEnemigos.cpp" />
     <ClCompile Include="EnemigoFactory.cpp" />
+    <ClCompile Include="EstrategiaAleatoria.cpp" />
+    <ClCompile Include="EstrategiaCreacion.cpp" />
+    <ClCompile Include="EstrategiaJugador.cpp" />
+    <ClCompile Include="EstrategiaTrofeo.cpp" />
+    <ClCompile Include="EstrategiaVelocidad.cpp" />
+    <ClCompile Include="JuegoFacade.cpp" />
     <ClCompile Include="Mapa.cpp" />
     <ClCompile Include="Controladora.cpp" />
     <ClCompile Include="Enemigo.cpp" />
@@ -141,6 +147,13 @@
     <ClInclude Include="ColeccionEnemigos.h" />
     <ClInclude Include="Comun.h" />
     <ClInclude Include="EnemigoFactory.h" />
+    <ClInclude Include="Estrategia.h" />
+    <ClInclude Include="EstrategiaAleatoria.h" />
+    <ClInclude Include="EstrategiaCreacion.h" />
+    <ClInclude Include="EstrategiaJugador.h" />
+    <ClInclude Include="EstrategiaTrofeo.h" />
+    <ClInclude Include="EstrategiaVelocidad.h" />
+    <ClInclude Include="JuegoFacade.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Controladora.h" />
     <ClInclude Include="Enemigo.h" />
