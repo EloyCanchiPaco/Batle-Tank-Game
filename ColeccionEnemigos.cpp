@@ -72,6 +72,6 @@ void CColeccionEnemigos::generarPorNivel(CMapa* mapa, int filaJugador, int colum
 
         if (fila == -1) continue;   // no encontró celda libre: omite este enemigo
 
-        Agregar(CEnemigoFactory::CrearEnemigo(tipoNivel, (short)enemigos.size(), fila, columna, jugador));
+        Agregar(CEnemigoFactory::CrearEnemigo(tipoNivel, (short)enemigos.size(), fila, columna, jugador,nivel));
     }
 }

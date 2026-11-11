@@ -24,7 +24,7 @@ CControladora::~CControladora() {
 
 void CControladora::Inicializar() {
 
-	mapa->nivel2(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	mapa->nivel4(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
 	Enemigos->generarPorNivel(mapa, 12, 4, jugador);
 
 }
@@ -49,4 +49,15 @@ void CControladora::moverEnemigos() {
 	for (int i = 0; i < Enemigos->getCantidad(); i++)
 		Enemigos->getEnemigo(i)->mover(mapa);
 }
+
+
+
+
+
+
+//arquirectura tipo monolito ->juego 
+//practica final,no es codigo ,hacer diagrama separando las clases especificas ,diagrama completo con las capaz despectivas (presentacion y negicion) 2 layer 
+//practica  7:Diagrama de clases completo 
+// incluir m-LAy o MVC
+//examen final juego con 6 patrones de diseño
 

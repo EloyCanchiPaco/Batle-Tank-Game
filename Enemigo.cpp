@@ -59,22 +59,22 @@ void CEnemigo::animar() {
 //
 void CEnemigo::setEstrategia(Estrategia* estrategia) {
 	delete aleatorio; aleatorio = nullptr;
-	delete ajugador;       ajugador = nullptr;        // TODO companeros
-	//delete atrofeo;        atrofeo = nullptr;
-	//delete mayorVelocidad; mayorVelocidad = nullptr;
+	delete ajugador;       ajugador = nullptr;        
+	delete atrofeo;        atrofeo = nullptr;
+	delete mayorVelocidad; mayorVelocidad = nullptr;
 
 	if ((aleatorio = dynamic_cast<EstrategiaAleatoria*>(estrategia))) return;
 	if ((ajugador = dynamic_cast<EstrategiaJugador*>(estrategia))) return;
-	//if ((atrofeo = dynamic_cast<EstrategiaTrofeo*>(estrategia))) return;
-	//if ((mayorVelocidad = dynamic_cast<EstrategiaVelocidad*>(estrategia))) return;
+	if ((atrofeo = dynamic_cast<EstrategiaTrofeo*>(estrategia))) return;
+	if ((mayorVelocidad = dynamic_cast<EstrategiaVelocidad*>(estrategia))) return;
 	delete estrategia;
 }
 
 void CEnemigo::mover(CMapa* mapa) {
 	if (aleatorio) aleatorio->mover(this, mapa);
-	else if (ajugador)        ajugador->mover(this, mapa);   // TODO companeros
-	//else if (atrofeo)         atrofeo->mover(this, mapa);
-	//else if (mayorVelocidad)  mayorVelocidad->mover(this, mapa);
+	else if (ajugador)        ajugador->mover(this, mapa);   
+	else if (atrofeo)         atrofeo->mover(this, mapa);
+	else if (mayorVelocidad)  mayorVelocidad->mover(this, mapa);
 }
 
 bool CEnemigo::puedeAvanzar(CMapa* mapa) {

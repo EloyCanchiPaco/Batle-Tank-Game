@@ -29,9 +29,6 @@ static bool esDestruible(CMapa* mapa, int f, int c) {
 	return b != nullptr && b->getTipo() == ETipoBloque::destruible;
 }
 
-// Llena dist con la distancia (en celdas) de cada celda hasta (fm, cm).
-// Si destructibles es true, los ladrillos tambien cuentan como camino
-// (se usa cuando no hay ruta libre, para acercarse lo mas posible).
 static void calcularDistancias(CMapa* mapa, int fm, int cm, int dist[MAX_FILAS][MAX_COLUMNAS], bool destructibles) {
 	for (int f = 0; f < MAX_FILAS; f++)
 		for (int c = 0; c < MAX_COLUMNAS; c++) dist[f][c] = -1;

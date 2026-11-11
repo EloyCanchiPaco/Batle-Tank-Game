@@ -20,8 +20,8 @@ class CEnemigo: public CTanque {
 	// //
 	EstrategiaJugador* ajugador = nullptr;
 	EstrategiaAleatoria* aleatorio = nullptr;
-	//EstrategiaTrofeo* atrofeo = nullptr;
-	//EstrategiaVelocidad* mayorVelocidad = nullptr;
+	EstrategiaTrofeo* atrofeo = nullptr;
+	EstrategiaVelocidad* mayorVelocidad = nullptr;
 private:
 	int imagenX = 0;
 public:
@@ -33,8 +33,6 @@ public:
 	void animar();
 	//
 	void setEstrategia(Estrategia* estrategia);
-	//void setVelocidad(int velocidad);
-	void mover();
 	//
 	void mover(CMapa* mapa);            // delega en la estrategia
 	// utilidades para las estrategias
