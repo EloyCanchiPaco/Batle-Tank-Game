@@ -15,8 +15,9 @@ bool ColisionLimites::bloquea(CTanque* tanque, int nx, int ny, ContextoColision*
 }
 
 // ---------------------------------------------------------------- Bloques
-ColisionBloques::ColisionBloques(bool atraviesaTrofeo) {
+ColisionBloques::ColisionBloques(bool atraviesaTrofeo, int margen) {
 	this->atraviesaTrofeo = atraviesaTrofeo;
+	this->margen = margen;
 }
 
 // Rectangulo que ocupa de verdad el bloque. Un ladrillo de mitad solo ocupa la mitad que queda.
@@ -24,7 +25,8 @@ ColisionBloques::ColisionBloques(bool atraviesaTrofeo) {
 static void rectSolido(CBloque* b, int f, int c, int& x, int& y, int& w, int& h) {
 	x = c * ANCHO_IMAGEN;  y = f * ALTO_IMAGEN;
 	w = ANCHO_IMAGEN;      h = ALTO_IMAGEN;
-	if (b->getTipo() != ETipoBloque::destruible) return;
+	if (b->getTipo() != ETipoBloque::destruible &&
+		b->getTipo() != ETipoBloque::noDestruible) return;
 	switch (b->getMitad()) {
 	case EMitadBloque::mitadArriba:    h = ALTO_IMAGEN / 2; break;
 	case EMitadBloque::mitadAbajo:     y += ALTO_IMAGEN / 2; h = ALTO_IMAGEN / 2; break;
@@ -38,7 +40,7 @@ bool ColisionBloques::bloquea(CTanque* tanque, int nx, int ny, ContextoColision*
 	if (ctx == nullptr || ctx->mapa == nullptr) return false;
 
 	// Rectángulo de colisión del tanque, un poco más pequeño que el sprite
-	const int MARGEN = 2;
+	const int MARGEN = margen;
 	int tx = nx + MARGEN, ty = ny + MARGEN;
 	int tw = ANCHO_IMAGEN - 2 * MARGEN, th = ALTO_IMAGEN - 2 * MARGEN;
 

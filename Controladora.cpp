@@ -30,7 +30,7 @@ balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr) {
 
 	// 3) cadena del jugador: igual, pero puede pisar el trofeo
 	cadenaJugador = new ColisionLimites();
-	cadenaJugador->setSiguiente(new ColisionBloques(true))->setSiguiente(new ColisionTanques());
+	cadenaJugador->setSiguiente(new ColisionBloques(true, 2))->setSiguiente(new ColisionTanques());
 
 	// 4) el jugador usa su cadena
 	jugador->setColision(cadenaJugador, &contexto);
@@ -48,7 +48,7 @@ CControladora::~CControladora() {
 
 void CControladora::Inicializar() {
 
-	mapa->nivel4(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	mapa->nivel3(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
 	Enemigos->setColision(cadenaEnemigos, &contexto);
 	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
 
@@ -96,7 +96,7 @@ void CControladora::actualizarBalas() {
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
 		e->actualizarDisparo();
-		CBala* be = e->sacarBala(false,40);
+		CBala* be = e->sacarBala(false,20);
 		if (be) balas->Agregar(be);
 	}
 	// 2) mover las balas y resolver choques

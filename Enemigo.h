@@ -7,18 +7,16 @@
 #include "EstrategiaVelocidad.h"
 #include "EstrategiaCombinada.h"
 enum ETipoTanque {
-	tipo1=0,
-	tipo2=4,
-	tipo3=8,
-	tipo4=12,
-	tipo5=16
+	tipo1 = 0,
+	tipo2 = 4,
+	tipo3 = 8,
+	tipo4 = 12,
+	tipo5 = 16
 };
 
-class CEnemigo: public CTanque {
+class CEnemigo : public CTanque {
 	ETipoTanque tipo;
-	//por aqui se deveria empezar a implementar el patron estrategia
 	// Solo UNO estara asignado a la vez; los demas quedan en nullptr.
-	// //
 	EstrategiaJugador* ajugador = nullptr;
 	EstrategiaAleatoria* aleatorio = nullptr;
 	EstrategiaTrofeo* atrofeo = nullptr;
@@ -26,8 +24,9 @@ class CEnemigo: public CTanque {
 	EstrategiaCombinada* combinada = nullptr;
 private:
 	int imagenX = 0;
+	int variante = -1;   // -1: sin variante; 0 o 1: cual mitad del par le toco
 public:
-	CEnemigo(short id,short tipo, int fila, int columna, int vidas);
+	CEnemigo(short id, short tipo, int fila, int columna, int vidas);
 	~CEnemigo();
 	void setTipo(ETipoTanque tipo);
 	ETipoTanque getTipo();
@@ -35,7 +34,9 @@ public:
 	void animar();
 	//
 	void setEstrategia(Estrategia* estrategia);
+	EstrategiaCombinada* getCombinada() { return combinada; }
+	int  getVariante() { return variante; }
+	void setVariante(int v) { variante = v; }
 	//
 	void mover(CMapa* mapa);            // delega en la estrategia
-
 };

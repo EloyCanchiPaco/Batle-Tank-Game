@@ -185,19 +185,22 @@ static EDireccion lineaDeTiro(CMapa* mapa, int fe, int ce, int fj, int cj) {
 void EstrategiaJugador::mover(CEnemigo* enemigo, CMapa* mapa) {
 	if (objetivo == nullptr) return;
 
-	bool alineado = enemigo->getX() % ANCHO_IMAGEN == 0 && enemigo->getY() % ALTO_IMAGEN == 0;
+	int fe = aCelda(enemigo->getY(), ALTO_IMAGEN, MAX_FILAS);
+	int ce = aCelda(enemigo->getX(), ANCHO_IMAGEN, MAX_COLUMNAS);
+	int fj = aCelda(objetivo->getY(), ALTO_IMAGEN, MAX_FILAS);
+	int cj = aCelda(objetivo->getX(), ANCHO_IMAGEN, MAX_COLUMNAS);
 
-	if (alineado && enemigo->puedeDisparar()) {
-		int fe = aCelda(enemigo->getY(), ALTO_IMAGEN, MAX_FILAS);
-		int ce = aCelda(enemigo->getX(), ANCHO_IMAGEN, MAX_COLUMNAS);
-		int fj = aCelda(objetivo->getY(), ALTO_IMAGEN, MAX_FILAS);
-		int cj = aCelda(objetivo->getX(), ANCHO_IMAGEN, MAX_COLUMNAS);
-		EDireccion d = lineaDeTiro(mapa, fe, ce, fj, cj);
-		if (d != EDireccion::ninguno) {
-			enemigo->setDireccion(d);
-			enemigo->disparar();
-			return;
+	bool alineado = enemigo->getX() % ANCHO_IMAGEN == 0 && enemigo->getY() % ALTO_IMAGEN == 0;
+	EDireccion d = lineaDeTiro(mapa, fe, ce, fj, cj);   // ninguno si no te ve
+
+	if (d != EDireccion::ninguno) {
+		if (alineado) {
+			enemigo->setDireccion(d);   // te mira
+			enemigo->disparar();        // dispara en cuanto puede
+			return;                     // se queda apuntando mientras te vea
 		}
+		// entre celdas no gira, pero si ya va hacia ti, dispara sin parar
+		if (enemigo->getDireccion() == d) enemigo->disparar();
 	}
 	perseguir(objetivo, enemigo, mapa, bloqueado);
 }

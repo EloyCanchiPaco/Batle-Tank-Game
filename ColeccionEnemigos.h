@@ -17,6 +17,7 @@ class CColeccionEnemigos {
     int maxEnPantalla = 5;       // maximo de enemigos vivos a la vez
     int espera = 0;              // ticks hasta el proximo que aparece
     int idSiguiente = 0;         // los ids no se repiten aunque mueran enemigos
+    int ultimaVariante = 1;      // para desempatar el reparto del par de estrategias
 
     // cadena de colisiones que reciben los enemigos al aparecer
     Colision* cadena = nullptr;
@@ -35,8 +36,6 @@ public:
     void dibujar(Graphics^ g, Bitmap^ bmpTanques);
 
     void setColision(Colision* cadena, ContextoColision* contexto);
-    // prepara el nivel: total de enemigos segun el nivel y primera tanda
     void iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador);
-    // llamar una vez por Tick: hace aparecer enemigos si hay lugar
     void actualizarGeneracion();
 };

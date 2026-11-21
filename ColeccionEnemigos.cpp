@@ -1,5 +1,6 @@
 #include "ColeccionEnemigos.h"
 #include "EnemigoFactory.h"
+#include "EstrategiaCombinada.h"
 #include <cstdlib>
 
 CColeccionEnemigos::~CColeccionEnemigos() {
@@ -26,7 +27,6 @@ CEnemigo* CColeccionEnemigos::getEnemigo(int indice) {
     return enemigos[indice];
 }
 
-// (si en tu proyecto ya cambiaste dibujar/animar, conserva TU version de esta funcion)
 void CColeccionEnemigos::dibujar(Graphics^ g, Bitmap^ bmpTanques) {
     for (int i = 0; i < (int)enemigos.size(); i++) {
         enemigos[i]->dibujar(g, bmpTanques);
@@ -58,7 +58,6 @@ bool CColeccionEnemigos::buscarCelda(int& fila, int& columna) {
     const int DISTANCIA_MINIMA = 6;               // en celdas
     const int FILAS_APARICION = MAX_FILAS / 2;    // solo las filas de la mitad de arriba
 
-    // posicion ACTUAL del jugador (si se movio, la distancia se mide desde donde esta ahora)
     int fj = filaJugador, cj = columnaJugador;
     if (jugador != nullptr) {
         fj = (jugador->getY() + ALTO_IMAGEN / 2) / ALTO_IMAGEN;
@@ -66,15 +65,16 @@ bool CColeccionEnemigos::buscarCelda(int& fila, int& columna) {
     }
 
     // celdas desde las que SE PUEDE llegar al jugador (por piso o rompiendo ladrillos)
-    // asi no aparecen enemigos encerrados entre agua o acero, sin camino posible
     bool alcanzable[MAX_FILAS][MAX_COLUMNAS];
     for (int f = 0; f < MAX_FILAS; f++)
         for (int c = 0; c < MAX_COLUMNAS; c++) alcanzable[f][c] = false;
     {
         int colaF[MAX_FILAS * MAX_COLUMNAS], colaC[MAX_FILAS * MAX_COLUMNAS];
         int inicio = 0, fin = 0;
-        if (fj < 0) fj = 0; if (fj >= MAX_FILAS) fj = MAX_FILAS - 1;
-        if (cj < 0) cj = 0; if (cj >= MAX_COLUMNAS) cj = MAX_COLUMNAS - 1;
+        if (fj < 0) fj = 0;
+        if (fj >= MAX_FILAS) fj = MAX_FILAS - 1;
+        if (cj < 0) cj = 0;
+        if (cj >= MAX_COLUMNAS) cj = MAX_COLUMNAS - 1;
         alcanzable[fj][cj] = true;
         colaF[fin] = fj; colaC[fin] = cj; fin++;
         const int df[4] = { -1, 1, 0, 0 };
@@ -99,12 +99,12 @@ bool CColeccionEnemigos::buscarCelda(int& fila, int& columna) {
     for (int intento = 0; intento < 500; intento++) {
         int f = rand() % FILAS_APARICION;
         int c = rand() % (MAX_COLUMNAS - 1);
-        if (!alcanzable[f][c]) continue;                                     // sin camino hasta el jugador
+        if (!alcanzable[f][c]) continue;
 
         CBloque* b = mapa->getBloque(f, c);
-        if (b == nullptr || b->getTipo() != ETipoBloque::piso) continue;     // solo sobre piso
-        if (abs(f - fj) + abs(c - cj) < DISTANCIA_MINIMA) continue;          // lejos del jugador
-        if (celdaOcupada(f, c)) continue;                                    // no sobre otro enemigo
+        if (b == nullptr || b->getTipo() != ETipoBloque::piso) continue;
+        if (abs(f - fj) + abs(c - cj) < DISTANCIA_MINIMA) continue;
+        if (celdaOcupada(f, c)) continue;
 
         fila = f; columna = c;
         return true;
@@ -118,6 +118,26 @@ bool CColeccionEnemigos::aparecerUno() {
     if (!buscarCelda(fila, columna)) return false;
 
     CEnemigo* e = CEnemigoFactory::CrearEnemigo(tipoNivel, (short)idSiguiente++, fila, columna, jugador, nivel);
+
+    // si el enemigo nace con un par de estrategias, le toca UNA sola mitad.
+    // Se reparte mitad y mitad entre los enemigos que estan vivos.
+    if (e->getCombinada() != nullptr) {
+        int n0 = 0, n1 = 0;
+        for (int k = 0; k < (int)enemigos.size(); k++) {
+            if (enemigos[k]->getVariante() == 0) n0++;
+            else if (enemigos[k]->getVariante() == 1) n1++;
+        }
+        int variante;
+        if (n0 < n1)      variante = 0;
+        else if (n1 < n0) variante = 1;
+        else              variante = 1 - ultimaVariante;   // empate: alterna
+        ultimaVariante = variante;
+
+        Estrategia* elegida = e->getCombinada()->extraer(variante);
+        e->setEstrategia(elegida);      // borra el par (la otra mitad) y deja solo la elegida
+        e->setVariante(variante);
+    }
+
     if (cadena != nullptr) e->setColision(cadena, contexto);    // los nuevos tambien chocan
     Agregar(e);
     pendientes--;
@@ -145,6 +165,7 @@ void CColeccionEnemigos::iniciarNivel(CMapa* mapa, int filaJugador, int columnaJ
     pendientes = totales[nivel - 1];
     maxEnPantalla = 5;                             // maximo vivos a la vez
     espera = 0;
+    ultimaVariante = 1;
 
     // primera tanda
     for (int i = 0; i < maxEnPantalla && pendientes > 0; i++)
@@ -157,6 +178,6 @@ void CColeccionEnemigos::actualizarGeneracion() {
 
     if ((int)enemigos.size() < maxEnPantalla) {
         if (aparecerUno())
-            espera = 60;       // ticks de pausa antes del siguiente (ajustalo a tu gusto)
+            espera = 60;       // ticks de pausa antes del siguiente
     }
 }

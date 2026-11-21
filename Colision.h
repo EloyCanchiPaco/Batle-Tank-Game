@@ -44,8 +44,9 @@ protected:
 // 2) El tanque no puede entrar en bloques solidos (usa el rectangulo real de los ladrillos de mitad)
 class ColisionBloques : public Colision {
 	bool atraviesaTrofeo;   // true: puede pisar el trofeo (el jugador, para tomarlo)
+	int margen;
 public:
-	ColisionBloques(bool atraviesaTrofeo = false);
+	ColisionBloques(bool atraviesaTrofeo = false, int margen = 2);
 protected:
 	bool bloquea(CTanque* tanque, int nx, int ny, ContextoColision* ctx) override;
 };

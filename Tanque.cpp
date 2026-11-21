@@ -7,7 +7,7 @@
 CTanque::CTanque(short id, int posX, int posY, int vidas) {
 	this->id = id;
 	this->vidas = vidas;
-	this->velocidad = 10;
+	this->velocidad = 8;
 	this->posX = posX;
 	this->posY = posY;
 }
@@ -83,11 +83,7 @@ void CTanque::setColision(Colision* cadena, ContextoColision* ctx) {
 	this->contexto = ctx;
 }
 
-// ¿puede dar el siguiente paso en su direccion actual?
 bool CTanque::puedeAvanzar() {
-	std::cout << "pos(" << posX << "," << posY << ") dir=" << (int)direccion
-		<< " ANCHO=" << ANCHO_IMAGEN << " ALTO=" << ALTO_IMAGEN
-		<< " vel=" << velocidad << std::endl;
 	int destX = posX, destY = posY;
 	switch (direccion) {
 	case EDireccion::arriba:    destY -= velocidad; break;
@@ -97,11 +93,7 @@ bool CTanque::puedeAvanzar() {
 	default: return false;
 	}
 	if (colision == nullptr) return true;
-	bool ok = colision == nullptr || colision->permite(this, destX, destY, contexto);
-	std::cout << "dest(" << destX << "," << destY << ") permite=" << ok << std::endl;
-	return ok;
 	return colision->permite(this, destX, destY, contexto);
-
 }
 
 void CTanque::alinearACelda() {
