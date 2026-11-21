@@ -125,8 +125,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="bala.cpp" />
     <ClCompile Include="Bloque.cpp" />
+    <ClCompile Include="coleccionBalas.cpp" />
     <ClCompile Include="ColeccionEnemigos.cpp" />
+    <ClCompile Include="Colision.cpp" />
     <ClCompile Include="EnemigoFactory.cpp" />
     <ClCompile Include="EstrategiaAleatoria.cpp" />
     <ClCompile Include="EstrategiaCreacion.cpp" />
@@ -143,12 +146,16 @@
     <ClCompile Include="Tanque.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="bala.h" />
     <ClInclude Include="Bloque.h" />
+    <ClInclude Include="coleccionBalas.h" />
     <ClInclude Include="ColeccionEnemigos.h" />
+    <ClInclude Include="Colision.h" />
     <ClInclude Include="Comun.h" />
     <ClInclude Include="EnemigoFactory.h" />
     <ClInclude Include="Estrategia.h" />
     <ClInclude Include="EstrategiaAleatoria.h" />
+    <ClInclude Include="EstrategiaCombinada.h" />
     <ClInclude Include="EstrategiaCreacion.h" />
     <ClInclude Include="EstrategiaJugador.h" />
     <ClInclude Include="EstrategiaTrofeo.h" />

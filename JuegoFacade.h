@@ -12,9 +12,13 @@ public:
 
 	void Iniciar();
 	void Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
-		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques);
+		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala);
 	void MoverJugador(EDireccion direccion);
 	void MoverEnemigos();
+	void Disparar();
+	void ActualizarBalas();
+
+	
 };
 
 

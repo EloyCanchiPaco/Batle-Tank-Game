@@ -1,5 +1,5 @@
 #include "Jugador.h"
-
+#include <iostream>
 void CJugador::setNombre(std::string nombre) {
 	this->nombre = nombre;
 }
@@ -13,6 +13,17 @@ int CJugador::getPuntuacion() {
 	return this->puntuacion;
 }
 
+void CJugador::animar() {
+	if (this->imagenX >= 0 && this->imagenX < 2) {
+		this->imagenX++;
+	}
+	if (this->imagenX == 2) {
+		while (this->imagenX != 0) {
+			this->imagenX--;
+		}
+	}
+}
+
 void CJugador::dibujar(Graphics^ g, Bitmap^ bmpTanques) {
 	int fila = 0;
 	switch (getDireccion()) {
@@ -22,7 +33,7 @@ void CJugador::dibujar(Graphics^ g, Bitmap^ bmpTanques) {
 		case EDireccion::izquierda:	fila = 3; break;
 		default:					fila = 0; break;
 	}
-	Rectangle origen = Rectangle(0 * ANCHO_IMAGEN, fila * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN);
+	Rectangle origen = Rectangle(imagenX * ANCHO_IMAGEN, fila * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN);
 	Rectangle zoom = Rectangle(getX(), getY(), ANCHO_IMAGEN * 1.0, ALTO_IMAGEN * 1.0);
 	g->DrawImage(bmpTanques, zoom, origen, GraphicsUnit::Pixel);
 };
@@ -36,4 +47,5 @@ CJugador::CJugador(short id, int fila, int columna, int vidas) :
 void CJugador::mover() {
 	CTanque::mover();
 }
+
 

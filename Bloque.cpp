@@ -16,7 +16,9 @@ ETipoBloque CBloque::getTipo() {
 void CBloque::setDurabilidad(short durabilidad) {
 	this->durabilidad = durabilidad;
 }
-
+void CBloque::setTipo(ETipoBloque tipo) {
+	this->tipo = tipo;
+}
 short CBloque::getDurabilidad() {
 	return this->durabilidad;
 }

@@ -4,6 +4,8 @@
 #include "Enemigo.h"
 #include "ColeccionEnemigos.h"
 #include "EnemigoFactory.h"
+#include "ColeccionBalas.h"
+#include "Colision.h"
 
 class CControladora {
 private:
@@ -11,6 +13,10 @@ private:
 	CJugador* jugador;
 	CColeccionEnemigos* Enemigos;
 	CBloque* trofeo;
+	CColeccionBalas* balas;
+	ContextoColision contexto;
+	Colision* cadenaJugador;
+	Colision* cadenaEnemigos;
 public:
 	CControladora();
 	~CControladora();
@@ -21,6 +27,9 @@ public:
 	void setDireccion(EDireccion direccion);
 	void moverJugador();
 	void moverEnemigos();
+	void jugadorDispara();
+	void actualizarBalas();
+	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala);
 
 
 };

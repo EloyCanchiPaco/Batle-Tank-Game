@@ -1,7 +1,7 @@
 #pragma once
-#include "Controladora.h"
 #include "JuegoFacade.h"
-
+#include <windows.h>
+#pragma comment(lib, "user32.lib")
 namespace Battle {
 
 	using namespace System;
@@ -18,12 +18,13 @@ namespace Battle {
 	{
 	public:
 		CJuegoFacade* juego = new CJuegoFacade();
-		CControladora* controladora = new CControladora();
+
 		Bitmap^ bmpPiso = gcnew Bitmap("imagenes\\pisos.png");
 		Bitmap^ bmpBloques = gcnew Bitmap("imagenes\\bloques.png");
 		Bitmap^ bmpTrofeo = gcnew Bitmap("imagenes\\trofeo.png");
 		Bitmap^ bmpTanques =gcnew Bitmap("imagenes\\tanques.png");
-
+		Bitmap^ bmpBala = gcnew Bitmap("imagenes\\bala.png");
+		bool teclaArriba = false, teclaAbajo = false, teclaIzquierda = false, teclaDerecha = false;
 
 		Juego(void)
 		{
@@ -83,49 +84,66 @@ namespace Battle {
 			this->WindowState = System::Windows::Forms::FormWindowState::Maximized;
 			this->Load += gcnew System::EventHandler(this, &Juego::Juego_Load);
 			this->KeyDown += gcnew System::Windows::Forms::KeyEventHandler(this, &Juego::Juego_KeyDown);
+			this->KeyUp += gcnew System::Windows::Forms::KeyEventHandler(this, &Juego::Juego_KeyUp);
 			this->ResumeLayout(false);
 
 		}
 #pragma endregion
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
-		controladora->moverEnemigos();
+		if (teclaArriba)    juego->MoverJugador(EDireccion::arriba);
+		else if (teclaAbajo)     juego->MoverJugador(EDireccion::abajo);
+		else if (teclaIzquierda) juego->MoverJugador(EDireccion::izquierda);
+		else if (teclaDerecha)   juego->MoverJugador(EDireccion::derecha);
+
+		juego->MoverEnemigos();
+		juego->ActualizarBalas();
 		Graphics^ g = this->CreateGraphics();
 		BufferedGraphicsContext^ espacio = BufferedGraphicsManager::Current;
 		BufferedGraphics^ buffer = espacio->Allocate(g, this->ClientRectangle);
 
-		controladora->DibujarMapa(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo);
-		controladora->DibujarTanques(buffer->Graphics, bmpTanques);
+		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala);
 		buffer->Render(g);
 
 		delete buffer, espacio, g;
 	}
 	private: System::Void Juego_Load(System::Object^ sender, System::EventArgs^ e) {
-		controladora->Inicializar();
+		juego->Iniciar();
 	}
 	private: System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
+
 		switch (e->KeyCode) {
 		case Keys::Up:
 			std::cout << "Tecla arriba" << std::endl;
-			controladora->setDireccion(EDireccion::arriba);
-			controladora->moverJugador();
+			teclaArriba = true;
 			break;
 		case Keys::Down:
 			std::cout << "Tecla abajo" << std::endl;
-			controladora->setDireccion(EDireccion::abajo);
-			controladora->moverJugador();
+			teclaAbajo = true;
+
 			break;
 		case Keys::Left:
 			std::cout << "Tecla izquierda" << std::endl;
-			controladora->setDireccion(EDireccion::izquierda);
-			controladora->moverJugador();
+			teclaIzquierda = true;
 			break;
 		case Keys::Right:
 			std::cout << "Tecla derecha" << std::endl;
-			controladora->setDireccion(EDireccion::derecha);
-			controladora->moverJugador();
+			teclaDerecha = true;
+			break;
+		case Keys::Space:     
+			std::cout << "1: tecla espacio" << std::endl;
+			juego->Disparar();
 			break;
 		default:
 			break;
+		}
+	}
+	private: System::Void Juego_KeyUp(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
+		switch (e->KeyCode) {
+		case Keys::Up:    teclaArriba = false;    break;
+		case Keys::Down:  teclaAbajo = false;     break;
+		case Keys::Left:  teclaIzquierda = false; break;
+		case Keys::Right: teclaDerecha = false;   break;
+		default: break;
 		}
 	}
 	};

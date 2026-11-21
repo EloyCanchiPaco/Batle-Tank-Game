@@ -1,8 +1,6 @@
-﻿  Enemigo.cpp
-C:\Users\eloy0\Downloads\battle-city-mapa\Enemigo.cpp(44,77): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\eloy0\Downloads\battle-city-mapa\Enemigo.cpp(44,58): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
+﻿  Controladora.cpp
+C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.cpp(93,37): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
   EstrategiaCreacion.cpp
-  EstrategiaJugador.cpp
   Generando código...
-  Bloque.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
+  bala.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
   Battle.vcxproj -> C:\Users\eloy0\Downloads\battle-city-mapa\x64\Debug\Battle.exe

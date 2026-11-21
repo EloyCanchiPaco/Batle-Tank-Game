@@ -5,6 +5,7 @@
 #include "EstrategiaJugador.h"
 #include "EstrategiaTrofeo.h"
 #include "EstrategiaVelocidad.h"
+#include "EstrategiaCombinada.h"
 enum ETipoTanque {
 	tipo1=0,
 	tipo2=4,
@@ -22,6 +23,7 @@ class CEnemigo: public CTanque {
 	EstrategiaAleatoria* aleatorio = nullptr;
 	EstrategiaTrofeo* atrofeo = nullptr;
 	EstrategiaVelocidad* mayorVelocidad = nullptr;
+	EstrategiaCombinada* combinada = nullptr;
 private:
 	int imagenX = 0;
 public:
@@ -35,7 +37,5 @@ public:
 	void setEstrategia(Estrategia* estrategia);
 	//
 	void mover(CMapa* mapa);            // delega en la estrategia
-	// utilidades para las estrategias
-	bool puedeAvanzar(CMapa* mapa);
-	void alinearACelda();
+
 };

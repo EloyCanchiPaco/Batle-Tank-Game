@@ -19,8 +19,12 @@ Class Battle.Juego: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Void .ctor(): PrivateScope, Public, HideBySig, SpecialName, RTSpecialName
   Fields:
     CJuegoFacade* juego : Public
-    CControladora* controladora : Public
     System.Drawing.Bitmap bmpPiso : Public
     System.Drawing.Bitmap bmpBloques : Public
     System.Drawing.Bitmap bmpTrofeo : Public
     System.Drawing.Bitmap bmpTanques : Public
+    System.Drawing.Bitmap bmpBala : Public
+    Boolean teclaArriba : Public
+    Boolean teclaAbajo : Public
+    Boolean teclaIzquierda : Public
+    Boolean teclaDerecha : Public

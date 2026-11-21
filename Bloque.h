@@ -18,6 +18,7 @@ class CBloque {
 	short getDurabilidad();
 	EMitadBloque getMitad();
 	void setMitad(EMitadBloque mitad);
+	void setTipo(ETipoBloque tipo);
 
 
 };
