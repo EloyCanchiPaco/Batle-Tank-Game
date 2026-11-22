@@ -145,6 +145,7 @@
     <ClCompile Include="Jugador.cpp" />
     <ClCompile Include="PanelHUD.cpp" />
     <ClCompile Include="Powerup.cpp" />
+    <ClCompile Include="Sonido.cpp" />
     <ClCompile Include="Tanque.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -174,6 +175,7 @@
     <ClInclude Include="Observador.h" />
     <ClInclude Include="PanelHUD.h" />
     <ClInclude Include="Powerup.h" />
+    <ClInclude Include="Sonido.h" />
     <ClInclude Include="Tanque.h" />
   </ItemGroup>
   <ItemGroup>

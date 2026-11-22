@@ -22,7 +22,7 @@ namespace Battle {
 		Bitmap^ bmpPiso = gcnew Bitmap("imagenes\\pisos.png");
 		Bitmap^ bmpBloques = gcnew Bitmap("imagenes\\bloques.png");
 		Bitmap^ bmpTrofeo = gcnew Bitmap("imagenes\\trofeo.png");
-		Bitmap^ bmpTanques =gcnew Bitmap("imagenes\\tanques.png");
+		Bitmap^ bmpTanques = gcnew Bitmap("imagenes\\tanques.png");
 		Bitmap^ bmpBala = gcnew Bitmap("imagenes\\bala.png");
 		bool teclaArriba = false, teclaAbajo = false, teclaIzquierda = false, teclaDerecha = false;
 
@@ -94,6 +94,7 @@ namespace Battle {
 		else if (teclaAbajo)     juego->MoverJugador(EDireccion::abajo);
 		else if (teclaIzquierda) juego->MoverJugador(EDireccion::izquierda);
 		else if (teclaDerecha)   juego->MoverJugador(EDireccion::derecha);
+		else juego->DetenerJugador();
 
 		juego->MoverEnemigos();
 		juego->ActualizarBalas();
@@ -130,7 +131,7 @@ namespace Battle {
 			std::cout << "Tecla derecha" << std::endl;
 			teclaDerecha = true;
 			break;
-		case Keys::Space:     
+		case Keys::Space:
 			std::cout << "1: tecla espacio" << std::endl;
 			juego->Disparar();
 			break;

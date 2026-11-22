@@ -1,8 +1,9 @@
 #include "Controladora.h"
 #include "EnemigoFactory.h"
+#include "Sonido.h"
 
 CControladora::CControladora() : mapa(nullptr), jugador(nullptr), Enemigos(nullptr), trofeo(nullptr),
-balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr),hud(nullptr) {
+balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr), hud(nullptr) {
 	srand((unsigned)time(nullptr));
 	std::cout << "Mapa: " << mapa << std::endl;
 	if (mapa == nullptr) {
@@ -36,9 +37,12 @@ balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr),hud(nullptr) {
 	jugador->setColision(cadenaJugador, &contexto);
 	hud = new CPanelHUD();
 	EstadoPartida::getInstancia().agregarObservador(hud);   // el panel se suscribe
+
+	Sonido::iniciar();
 }
 //
 CControladora::~CControladora() {
+	Sonido::cerrar();
 	EstadoPartida::getInstancia().quitarObservador(hud);
 	delete hud;
 	delete mapa;
@@ -74,11 +78,18 @@ void CControladora::setDireccion(EDireccion nueva) {
 
 void CControladora::moverJugador() {
 	if (jugador->puedeAvanzar()) { // pregunta a la cadena de colisiones
-			jugador->mover();
-	    jugador->animar();
-	
-	}       
+		jugador->mover();
+		jugador->animar();
+		Sonido::motor(true);
+	}
+	else {
+		Sonido::motor(false);   // choco contra algo
+	}
+}
 
+// Ninguna tecla presionada: silenciar el motor
+void CControladora::detenerJugador() {
+	Sonido::motor(false);
 }
 
 void CControladora::moverEnemigos() {
@@ -95,14 +106,14 @@ void CControladora::jugadorDispara() {
 void CControladora::actualizarBalas() {
 	// 1) recoger los disparos pedidos
 	jugador->actualizarDisparo();
-	CBala* b = jugador->sacarBala(true,5.5);
-	if (b) balas->Agregar(b);
+	CBala* b = jugador->sacarBala(true, 5.5);
+	if (b) { balas->Agregar(b); Sonido::disparo(); }
 
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
 		e->actualizarDisparo();
-		CBala* be = e->sacarBala(false,20);
-		if (be) balas->Agregar(be);
+		CBala* be = e->sacarBala(false, 20);
+		if (be) { balas->Agregar(be); Sonido::disparo(); }
 	}
 	// 2) mover las balas y resolver choques
 	int antes = Enemigos->getRestantes();
@@ -131,4 +142,3 @@ void CControladora::DibujarHUD(Graphics^ g) {
 //practica  7:Diagrama de clases completo 
 // incluir m-LAy o MVC
 //examen final juego con 6 patrones de diseño
-

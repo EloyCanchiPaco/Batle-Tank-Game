@@ -34,5 +34,6 @@ public:
 	void actualizarBalas();
 	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala);
 	void DibujarHUD(Graphics^ g);
+	void detenerJugador();
 
 };

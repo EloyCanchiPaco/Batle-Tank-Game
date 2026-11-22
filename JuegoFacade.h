@@ -14,6 +14,7 @@ public:
 	void Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
 		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala);
 	void MoverJugador(EDireccion direccion);
+	void DetenerJugador();
 	void MoverEnemigos();
 	void Disparar();
 	void ActualizarBalas();

@@ -26,6 +26,12 @@ void CJuegoFacade::MoverJugador(EDireccion direccion) {
 	controladora->setDireccion(direccion);
 	controladora->moverJugador();
 }
+
+// Ninguna tecla presionada
+void CJuegoFacade::DetenerJugador() {
+	controladora->detenerJugador();
+}
+
 void CJuegoFacade::MoverEnemigos() {
 	controladora->moverEnemigos();
 }
@@ -38,4 +44,3 @@ void CJuegoFacade::ActualizarBalas() {
 	controladora->actualizarBalas();
 
 }
-
