@@ -131,6 +131,7 @@
     <ClCompile Include="ColeccionEnemigos.cpp" />
     <ClCompile Include="Colision.cpp" />
     <ClCompile Include="EnemigoFactory.cpp" />
+    <ClCompile Include="EstadoPartida.cpp" />
     <ClCompile Include="EstrategiaAleatoria.cpp" />
     <ClCompile Include="EstrategiaCreacion.cpp" />
     <ClCompile Include="EstrategiaJugador.cpp" />
@@ -142,6 +143,7 @@
     <ClCompile Include="Enemigo.cpp" />
     <ClCompile Include="Juego.cpp" />
     <ClCompile Include="Jugador.cpp" />
+    <ClCompile Include="PanelHUD.cpp" />
     <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="Tanque.cpp" />
   </ItemGroup>
@@ -153,6 +155,7 @@
     <ClInclude Include="Colision.h" />
     <ClInclude Include="Comun.h" />
     <ClInclude Include="EnemigoFactory.h" />
+    <ClInclude Include="EstadoPartida.h" />
     <ClInclude Include="Estrategia.h" />
     <ClInclude Include="EstrategiaAleatoria.h" />
     <ClInclude Include="EstrategiaCombinada.h" />
@@ -168,6 +171,8 @@
       <FileType>CppForm</FileType>
     </ClInclude>
     <ClInclude Include="Jugador.h" />
+    <ClInclude Include="Observador.h" />
+    <ClInclude Include="PanelHUD.h" />
     <ClInclude Include="Powerup.h" />
     <ClInclude Include="Tanque.h" />
   </ItemGroup>

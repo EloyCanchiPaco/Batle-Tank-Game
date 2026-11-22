@@ -18,6 +18,7 @@ void CJuegoFacade::Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
 	controladora->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo);
 	controladora->DibujarTanques(g, bmpTanques);
 	controladora->DibujarBalas(g, bmpBala);
+	controladora->DibujarHUD(g);
 }
 
 // Una sola llamada: cambia la dirección y mueve
@@ -35,5 +36,6 @@ void CJuegoFacade::Disparar() {
 
 void CJuegoFacade::ActualizarBalas() {
 	controladora->actualizarBalas();
+
 }
 

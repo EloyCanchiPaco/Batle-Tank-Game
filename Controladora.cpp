@@ -2,7 +2,7 @@
 #include "EnemigoFactory.h"
 
 CControladora::CControladora() : mapa(nullptr), jugador(nullptr), Enemigos(nullptr), trofeo(nullptr),
-balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr) {
+balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr),hud(nullptr) {
 	srand((unsigned)time(nullptr));
 	std::cout << "Mapa: " << mapa << std::endl;
 	if (mapa == nullptr) {
@@ -34,9 +34,13 @@ balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr) {
 
 	// 4) el jugador usa su cadena
 	jugador->setColision(cadenaJugador, &contexto);
+	hud = new CPanelHUD();
+	EstadoPartida::getInstancia().agregarObservador(hud);   // el panel se suscribe
 }
 //
 CControladora::~CControladora() {
+	EstadoPartida::getInstancia().quitarObservador(hud);
+	delete hud;
 	delete mapa;
 	delete jugador;
 	delete Enemigos;
@@ -51,6 +55,7 @@ void CControladora::Inicializar() {
 	mapa->nivel3(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
 	Enemigos->setColision(cadenaEnemigos, &contexto);
 	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
+	EstadoPartida::getInstancia().nuevaPartida(mapa->getNivel(), jugador->getVidas(), Enemigos->getRestantes());
 
 }
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {
@@ -100,13 +105,23 @@ void CControladora::actualizarBalas() {
 		if (be) balas->Agregar(be);
 	}
 	// 2) mover las balas y resolver choques
+	int antes = Enemigos->getRestantes();
 	balas->actualizar(mapa, jugador, Enemigos);
+
+	// 3) avisar al estado de la partida (solo notifica si algo cambio)
+	EstadoPartida& estado = EstadoPartida::getInstancia();
+	int muertos = antes - Enemigos->getRestantes();
+	if (muertos > 0) estado.sumarPuntos(muertos * 100);      // 100 puntos por enemigo
+	estado.setEnemigosRestantes(Enemigos->getRestantes());
+	estado.setVidas(jugador->getVidas());
 }
 
 void CControladora::DibujarBalas(Graphics^ g, Bitmap^ bmpBala) {
 	balas->dibujar(g, bmpBala);
 }
-
+void CControladora::DibujarHUD(Graphics^ g) {
+	hud->dibujar(g);
+}
 
 
 

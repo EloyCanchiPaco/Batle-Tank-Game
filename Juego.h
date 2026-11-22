@@ -101,6 +101,7 @@ namespace Battle {
 		BufferedGraphicsContext^ espacio = BufferedGraphicsManager::Current;
 		BufferedGraphics^ buffer = espacio->Allocate(g, this->ClientRectangle);
 
+
 		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala);
 		buffer->Render(g);
 
@@ -112,20 +113,20 @@ namespace Battle {
 	private: System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
 
 		switch (e->KeyCode) {
-		case Keys::Up:
+		case Keys::W:
 			std::cout << "Tecla arriba" << std::endl;
 			teclaArriba = true;
 			break;
-		case Keys::Down:
+		case Keys::S:
 			std::cout << "Tecla abajo" << std::endl;
 			teclaAbajo = true;
 
 			break;
-		case Keys::Left:
+		case Keys::A:
 			std::cout << "Tecla izquierda" << std::endl;
 			teclaIzquierda = true;
 			break;
-		case Keys::Right:
+		case Keys::D:
 			std::cout << "Tecla derecha" << std::endl;
 			teclaDerecha = true;
 			break;
@@ -139,10 +140,10 @@ namespace Battle {
 	}
 	private: System::Void Juego_KeyUp(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
 		switch (e->KeyCode) {
-		case Keys::Up:    teclaArriba = false;    break;
-		case Keys::Down:  teclaAbajo = false;     break;
-		case Keys::Left:  teclaIzquierda = false; break;
-		case Keys::Right: teclaDerecha = false;   break;
+		case Keys::W:    teclaArriba = false;    break;
+		case Keys::S:  teclaAbajo = false;     break;
+		case Keys::A:  teclaIzquierda = false; break;
+		case Keys::D: teclaDerecha = false;   break;
 		default: break;
 		}
 	}

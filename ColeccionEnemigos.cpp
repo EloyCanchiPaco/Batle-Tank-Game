@@ -151,7 +151,7 @@ void CColeccionEnemigos::setColision(Colision* cadena, ContextoColision* context
 
 void CColeccionEnemigos::iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador) {
     ETipoTanque tipos[] = { tipo1, tipo2, tipo3, tipo4, tipo5 };
-    int totales[] = { 10, 12, 15, 18, 20 };        // enemigos EN TOTAL por nivel: aqui se edita
+    int totales[] = { 11, 12, 15, 18, 20 };        // enemigos EN TOTAL por nivel: aqui se edita
 
     this->mapa = mapa;
     this->filaJugador = filaJugador;

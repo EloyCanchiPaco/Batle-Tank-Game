@@ -6,6 +6,8 @@
 #include "EnemigoFactory.h"
 #include "ColeccionBalas.h"
 #include "Colision.h"
+#include "EstadoPartida.h"
+#include "PanelHUD.h"
 
 class CControladora {
 private:
@@ -17,6 +19,7 @@ private:
 	ContextoColision contexto;
 	Colision* cadenaJugador;
 	Colision* cadenaEnemigos;
+	CPanelHUD* hud;
 public:
 	CControladora();
 	~CControladora();
@@ -30,6 +33,6 @@ public:
 	void jugadorDispara();
 	void actualizarBalas();
 	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala);
-
+	void DibujarHUD(Graphics^ g);
 
 };

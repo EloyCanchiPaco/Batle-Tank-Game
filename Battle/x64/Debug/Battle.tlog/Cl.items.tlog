@@ -4,6 +4,7 @@ C:\Users\eloy0\Downloads\battle-city-mapa\coleccionBalas.cpp;C:\Users\eloy0\Down
 C:\Users\eloy0\Downloads\battle-city-mapa\ColeccionEnemigos.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\ColeccionEnemigos.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Colision.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Colision.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\EnemigoFactory.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\EnemigoFactory.obj
+C:\Users\eloy0\Downloads\battle-city-mapa\EstadoPartida.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\EstadoPartida.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\EstrategiaAleatoria.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\EstrategiaAleatoria.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\EstrategiaCreacion.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\EstrategiaCreacion.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\EstrategiaJugador.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\EstrategiaJugador.obj
@@ -15,6 +16,7 @@ C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.cpp;C:\Users\eloy0\Downlo
 C:\Users\eloy0\Downloads\battle-city-mapa\Enemigo.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Enemigo.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Juego.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Juego.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Jugador.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Jugador.obj
+C:\Users\eloy0\Downloads\battle-city-mapa\PanelHUD.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\PanelHUD.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Powerup.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Powerup.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Tanque.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\Tanque.obj
 C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.cpp;C:\Users\eloy0\Downloads\battle-city-mapa\Battle\x64\Debug\.NETFramework,Version=v4.7.2.AssemblyAttributes.obj
