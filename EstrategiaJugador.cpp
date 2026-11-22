@@ -15,6 +15,8 @@ static int aCelda(int valor, int tam, int maximo) {
 
 static const int df[4] = { -1, 1, 0, 0 };
 static const int dc[4] = { 0, 0, -1, 1 };
+static const int REACCION_MIN = 15;        // ticks minimos antes de disparar al verte
+static const int REACCION_VARIACION = 15;  // se le suma un azar de 0 a 14, para que no disparen todos igual
 
 static bool esPiso(CMapa* mapa, int f, int c) {
 	if (f < 0 || c < 0 || f >= MAX_FILAS || c >= MAX_COLUMNAS) return false;
@@ -130,7 +132,6 @@ static void perseguir(CTanque* objetivo, CEnemigo* enemigo, CMapa* mapa, int& bl
 	// pegado al jugador: lo mira y dispara
 	if (actual == 1) {
 		enemigo->setDireccion(dirs[cand[0]]);
-		enemigo->disparar();
 		return;
 	}
 
@@ -193,14 +194,27 @@ void EstrategiaJugador::mover(CEnemigo* enemigo, CMapa* mapa) {
 	bool alineado = enemigo->getX() % ANCHO_IMAGEN == 0 && enemigo->getY() % ALTO_IMAGEN == 0;
 	EDireccion d = lineaDeTiro(mapa, fe, ce, fj, cj);   // ninguno si no te ve
 
-	if (d != EDireccion::ninguno) {
-		if (alineado) {
-			enemigo->setDireccion(d);   // te mira
-			enemigo->disparar();        // dispara en cuanto puede
-			return;                     // se queda apuntando mientras te vea
-		}
-		// entre celdas no gira, pero si ya va hacia ti, dispara sin parar
-		if (enemigo->getDireccion() == d) enemigo->disparar();
+	if (d == EDireccion::ninguno) {
+		tiempoVisto = 0;                                 // dejo de verte: reinicia la reaccion
 	}
-	perseguir(objetivo, enemigo, mapa, bloqueado);
+	else {
+		if (tiempoVisto == 0)                            // te acaba de ver: elige cuanto va a tardar
+			retardo = REACCION_MIN + rand() % REACCION_VARIACION;
+		tiempoVisto++;
+
+		if (tiempoVisto >= retardo && enemigo->puedeDisparar()) {
+			if (alineado) {
+				enemigo->setDireccion(d);                // te apunta
+				enemigo->disparar();
+				tiempoVisto = 0;
+				if (enemigo->puedeAvanzar()) enemigo->CTanque::mover();   // dispara sin detenerse
+				return;
+			}
+			if (enemigo->getDireccion() == d) {          // entre celdas: solo si ya va hacia ti
+				enemigo->disparar();
+				tiempoVisto = 0;
+			}
+		}
+	}
+	perseguir(objetivo, enemigo, mapa, bloqueado);        // mientras tanto sigue persiguiendote
 }
