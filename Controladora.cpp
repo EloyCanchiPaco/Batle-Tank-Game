@@ -63,8 +63,8 @@ void CControladora::Inicializar() {
 	Sonido::inicioNivel;
 
 }
-void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {
-	mapa->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo);
+void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD) {
+	mapa->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo,bmpTrofeoD);
 };
 
 //dibujar tanques
@@ -134,8 +134,8 @@ void CControladora::actualizarBalas() {
 	estado.setVidas(jugador->getVidas());
 }
 
-void CControladora::DibujarBalas(Graphics^ g, Bitmap^ bmpBala) {
-	balas->dibujar(g, bmpBala);
+void CControladora::DibujarBalas(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion) {
+	balas->dibujar(g, bmpBala,bmpExplosion);
 }
 void CControladora::DibujarHUD(Graphics^ g) {
 	hud->dibujar(g);

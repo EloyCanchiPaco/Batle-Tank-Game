@@ -1,6 +1,13 @@
 #include "ColeccionBalas.h"
-//existe porque hay muchas balas a la vez, y alguien tiene que guardarlas, 
-// actualizarlas y borrarlas. Sigue el mismo diseño que ya usas con CColeccionEnemigos.
+#include "Sonido.h"
+
+// Cuadro de explosion.png (0 = chico, 1 = mediano, 2 = grande) y cuantos ticks se ve cada tipo.
+static const int CUADRO_IMPACTO = 1, TICKS_IMPACTO = 3;
+static const int CUADRO_GRANDE = 2, TICKS_GRANDE = 6;
+static const int TAM_IMPACTO = 64;          // tamano en pantalla de la explosion mediana
+static const int TAM_ENEMIGO = 96;          // enemigo destruido
+static const int TAM_TROFEO = 128;          // aguila destruida
+
 CColeccionBalas::~CColeccionBalas() {
 	for (CBala* b : balas) delete b;
 	balas.clear();
@@ -8,6 +15,22 @@ CColeccionBalas::~CColeccionBalas() {
 
 void CColeccionBalas::Agregar(CBala* bala) {
 	balas.push_back(bala);
+}
+
+void CColeccionBalas::crearExplosion(int cx, int cy, bool grande, int tam) {
+	Explosion e = { cx, cy, tam, grande ? CUADRO_GRANDE : CUADRO_IMPACTO, grande ? TICKS_GRANDE : TICKS_IMPACTO };
+	explosiones.push_back(e);
+}
+
+// Explosion mediana en el centro de la bala, sin salirse de los limites del mapa
+void CColeccionBalas::explosionEnBala(CBala* b) {
+	int x = b->getX() + CBala::TAM / 2;
+	int y = b->getY() + CBala::TAM / 2;
+	if (x < 0) x = 0;
+	if (y < 0) y = 0;
+	if (x > MAX_COLUMNAS * ANCHO_IMAGEN) x = MAX_COLUMNAS * ANCHO_IMAGEN;
+	if (y > MAX_FILAS * ALTO_IMAGEN) y = MAX_FILAS * ALTO_IMAGEN;
+	crearExplosion(x, y, false, TAM_IMPACTO);
 }
 
 // Ladrillo: el primer impacto rompe la mitad por la que entra la bala (queda la opuesta);
@@ -29,7 +52,7 @@ static void golpearLadrillo(CBloque* b, EDireccion dirBala) {
 }
 
 // Rectangulo (en pixeles) que ocupa de verdad el bloque de la celda (f, c).
-// Un ladrillo de mitad solo ocupa la mitad que queda; el resto de la celda esta vacio.
+// Un bloque de mitad (ladrillo o gris) solo ocupa la mitad que queda; el resto de la celda esta vacio.
 static void rectSolido(CBloque* bloque, int f, int c, int& x, int& y, int& w, int& h) {
 	x = c * ANCHO_IMAGEN;  y = f * ALTO_IMAGEN;
 	w = ANCHO_IMAGEN;      h = ALTO_IMAGEN;
@@ -56,6 +79,11 @@ static bool solapa(CBala* b, CTanque* t) {
 }
 
 void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemigos* enemigos) {
+	// las explosiones que ya estaban pierden un tick de vida
+	for (int i = (int)explosiones.size() - 1; i >= 0; i--)
+		if (--explosiones[i].restante <= 0)
+			explosiones.erase(explosiones.begin() + i);
+
 	for (int i = (int)balas.size() - 1; i >= 0; i--) {
 		CBala* b = balas[i];
 		b->mover();
@@ -64,6 +92,7 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 		int c1 = b->getX() / ANCHO_IMAGEN, c2 = (b->getX() + CBala::TAM - 1) / ANCHO_IMAGEN;
 		int f1 = b->getY() / ALTO_IMAGEN, f2 = (b->getY() + CBala::TAM - 1) / ALTO_IMAGEN;
 		if (b->getX() < 0 || b->getY() < 0 || c2 >= MAX_COLUMNAS || f2 >= MAX_FILAS) {
+			explosionEnBala(b);
 			b->desactivar();
 		}
 		else {
@@ -82,6 +111,15 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 						continue;                                // choca con la parte VACIA de la celda
 
 					if (t == ETipoBloque::destruible) golpearLadrillo(bloque, b->getDireccion());
+
+					if (t == ETipoBloque::trofeo && bloque->getDurabilidad() > 0) {
+						bloque->setDurabilidad(0);               // el aguila cae: Mapa la dibuja como bandera
+						crearExplosion(c * ANCHO_IMAGEN + ANCHO_IMAGEN / 2, f * ALTO_IMAGEN + ALTO_IMAGEN / 2, true, TAM_TROFEO);
+						Sonido::explosion();
+					}
+					else {
+						explosionEnBala(b);                      // pared: explosion mediana
+					}
 					b->desactivar();
 				}
 			}
@@ -94,7 +132,13 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 					CEnemigo* e = enemigos->getEnemigo(k);
 					if (solapa(b, e)) {
 						e->setVidas(e->getVidas() - 1);
-						if (e->getVidas() <= 0) enemigos->EliminarPorId(e->getId());
+						if (e->getVidas() <= 0) {
+							crearExplosion(e->getX() + ANCHO_IMAGEN / 2, e->getY() + ALTO_IMAGEN / 2, true, TAM_ENEMIGO);
+							enemigos->EliminarPorId(e->getId());
+						}
+						else {
+							explosionEnBala(b);                  // golpe sin destruir
+						}
 						b->desactivar();
 						break;   // la lista cambio, se sale del for
 					}
@@ -102,7 +146,7 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 			}
 			else if (solapa(b, jugador)) {
 				jugador->setVidas(jugador->getVidas() - 1);
-				// TODO: si vidas <= 0 -> game over
+				explosionEnBala(b);
 				b->desactivar();
 			}
 		}
@@ -114,6 +158,15 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 	}
 }
 
-void CColeccionBalas::dibujar(Graphics^ g, Bitmap^ bmpBala) {
+void CColeccionBalas::dibujar(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion) {
 	for (CBala* b : balas) b->dibujar(g, bmpBala);
+
+	if (bmpExplosion == nullptr) return;
+	int tamCuadro = bmpExplosion->Height;        // cada cuadro es cuadrado (64x64)
+	for (size_t i = 0; i < explosiones.size(); i++) {
+		Explosion& e = explosiones[i];
+		Rectangle origen = Rectangle(e.cuadro * tamCuadro, 0, tamCuadro, tamCuadro);
+		Rectangle destino = Rectangle(e.x - e.tam / 2, e.y - e.tam / 2, e.tam, e.tam);
+		g->DrawImage(bmpExplosion, destino, origen, GraphicsUnit::Pixel);
+	}
 }

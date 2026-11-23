@@ -14,10 +14,10 @@ void CJuegoFacade::Iniciar() {
 
 // Una sola llamada dibuja mapa y tanques, en el orden correcto
 void CJuegoFacade::Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
-	Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala) {
-	controladora->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo);
+	Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala, Bitmap^ bmpExplosion, Bitmap^ bmpTrofeoD) {
+	controladora->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo,bmpTrofeoD);
 	controladora->DibujarTanques(g, bmpTanques);
-	controladora->DibujarBalas(g, bmpBala);
+	controladora->DibujarBalas(g, bmpBala, bmpExplosion);
 	controladora->DibujarHUD(g);
 }
 

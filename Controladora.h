@@ -25,14 +25,14 @@ public:
 	~CControladora();
 
 	void Inicializar();
-	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo);
+	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD);
 	void DibujarTanques(Graphics^ g, Bitmap^ bmpTanques);
 	void setDireccion(EDireccion direccion);
 	void moverJugador();
 	void moverEnemigos();
 	void jugadorDispara();
 	void actualizarBalas();
-	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala);
+	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion);
 	void DibujarHUD(Graphics^ g);
 	void detenerJugador();
 

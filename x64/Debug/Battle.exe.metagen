@@ -24,6 +24,8 @@ Class Battle.Juego: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     System.Drawing.Bitmap bmpTrofeo : Public
     System.Drawing.Bitmap bmpTanques : Public
     System.Drawing.Bitmap bmpBala : Public
+    System.Drawing.Bitmap bmpExplosion : Public
+    System.Drawing.Bitmap bmpTrofeoD : Public
     Boolean teclaArriba : Public
     Boolean teclaAbajo : Public
     Boolean teclaIzquierda : Public

@@ -24,12 +24,16 @@ namespace Battle {
 		Bitmap^ bmpTrofeo = gcnew Bitmap("imagenes\\trofeo.png");
 		Bitmap^ bmpTanques = gcnew Bitmap("imagenes\\tanques.png");
 		Bitmap^ bmpBala = gcnew Bitmap("imagenes\\bala.png");
+		Bitmap^ bmpExplosion = gcnew Bitmap("imagenes\\explosion.png");
+		Bitmap^ bmpTrofeoD = gcnew Bitmap("imagenes\\trofeoD.png");
 		bool teclaArriba = false, teclaAbajo = false, teclaIzquierda = false, teclaDerecha = false;
 
 		Juego(void)
 		{
 			InitializeComponent();
 			bmpTanques->MakeTransparent(Color::Yellow);
+			bmpExplosion->MakeTransparent(Color::Yellow);
+			bmpTrofeo->MakeTransparent(Color::Black);
 			//
 			//TODO: agregar código de constructor aquí
 			//
@@ -103,7 +107,7 @@ namespace Battle {
 		BufferedGraphics^ buffer = espacio->Allocate(g, this->ClientRectangle);
 
 
-		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala);
+		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala, bmpExplosion, bmpTrofeoD);
 		buffer->Render(g);
 
 		delete buffer, espacio, g;

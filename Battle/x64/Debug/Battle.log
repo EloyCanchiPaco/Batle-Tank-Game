@@ -1,6 +1,3 @@
-﻿  Controladora.cpp
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.cpp(63,10): warning C4551: la llamada a la función no tiene lista de argumentos
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.cpp(110,38): warning C4244: 'argumento': conversión de 'double' a 'int'; posible pérdida de datos
-C:\Users\eloy0\Downloads\battle-city-mapa\Controladora.cpp(117,41): warning C4551: la llamada a la función no tiene lista de argumentos
+﻿  Juego.cpp
   bala.obj : se encontró un módulo MSIL; vinculación incremental deshabilitada para MSIL; ejecutando vínculo completo
   Battle.vcxproj -> C:\Users\eloy0\Downloads\battle-city-mapa\x64\Debug\Battle.exe

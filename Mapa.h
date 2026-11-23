@@ -20,6 +20,6 @@ class CMapa {
 	void nivel3(ETipoPiso PisoDeseado);
 	void nivel4(ETipoPiso PisoDeseado);
 	void nivel5(ETipoPiso PisoDeseado);	
-	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo );
+	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD);
 };
 

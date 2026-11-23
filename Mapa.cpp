@@ -1,5 +1,7 @@
 #include "Mapa.h"
 
+static const int COL_TROFEO_DESTRUIDO = 1;    // columna (de 64 px) donde esta la bandera dentro de trofeo.png
+
 CMapa::CMapa() {
 	nivel = 1;
 	tipoPiso = ETipoPiso::TierraClara;
@@ -377,7 +379,7 @@ void CMapa::nivel5(ETipoPiso PisoDeseado) {
 
 
 
-void CMapa::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo ) {
+void CMapa::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD) {
     int X = 0, Y = 0;
     int columna = this->tipoPiso % 2;
 	int fila = this->tipoPiso / 2;
@@ -473,9 +475,19 @@ void CMapa::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap
                 g->DrawImage(bmpBloques, zoom, rectNoDestruible, GraphicsUnit::Pixel);
             }
             if (getBloque(i, j)->getTipo() == ETipoBloque::trofeo) {
-                Rectangle rectTrofeo = Rectangle(0 * ANCHO_IMAGEN, 0 * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN);
-                Rectangle zoom = Rectangle(X, Y, ANCHO_IMAGEN * 1.0, ALTO_IMAGEN * 1.0);
-                g->DrawImage(bmpTrofeo, zoom, rectTrofeo, GraphicsUnit::Pixel);
+                Rectangle zoom = Rectangle(X, Y, ANCHO_IMAGEN, ALTO_IMAGEN);
+                Rectangle rectPiso = Rectangle(columna * ANCHO_IMAGEN, fila * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN);
+                g->DrawImage(bmpPiso, zoom, rectPiso, GraphicsUnit::Pixel);
+                if (getBloque(i, j)->getDurabilidad() > 0) {
+                    // aguila entera
+                    Rectangle rectTrofeo = Rectangle(0, 0, ANCHO_IMAGEN, ALTO_IMAGEN);
+                    g->DrawImage(bmpTrofeo, zoom, rectTrofeo, GraphicsUnit::Pixel);
+                }
+                else {
+                    // aguila destruida (la pone CColeccionBalas): imagen completa de trofeoD.png
+                    Rectangle rectD = Rectangle(0, 0, bmpTrofeoD->Width, bmpTrofeoD->Height);
+                    g->DrawImage(bmpTrofeoD, zoom, rectD, GraphicsUnit::Pixel);
+                }
             }
 
             X += ANCHO_IMAGEN;

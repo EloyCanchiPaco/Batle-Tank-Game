@@ -12,7 +12,7 @@ public:
 
 	void Iniciar();
 	void Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
-		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala);
+		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala, Bitmap^ bmpExplosion, Bitmap^ bmpTrofeoD);
 	void MoverJugador(EDireccion direccion);
 	void DetenerJugador();
 	void MoverEnemigos();
