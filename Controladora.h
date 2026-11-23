@@ -31,9 +31,12 @@ public:
 	void moverJugador();
 	void moverEnemigos();
 	void jugadorDispara();
-	void actualizarBalas();
 	void DibujarBalas(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion);
 	void DibujarHUD(Graphics^ g);
+	void actualizarBalas();
 	void detenerJugador();
+	void recogerDisparos();
+	void reproducirSonidos();
+	void actualizarEstado(int enemigosAntes);
 
 };

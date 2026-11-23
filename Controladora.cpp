@@ -105,31 +105,43 @@ void CControladora::jugadorDispara() {
 }
 
 void CControladora::actualizarBalas() {
-	// 1) recoger los disparos pedidos
+	recogerDisparos();
+	int antes = Enemigos->getRestantes();
+	balas->actualizar(mapa, jugador, Enemigos);
+	reproducirSonidos();
+	actualizarEstado(antes);
+}
+
+void CControladora::recogerDisparos() {
 	jugador->actualizarDisparo();
-	CBala* b = jugador->sacarBala(true, 5.5);
-	if (b) { balas->Agregar(b); Sonido::disparo(); }
+	if (CBala* b = jugador->sacarBala(true, 5.5)) balas->Agregar(b);
 
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
 		e->actualizarDisparo();
-		CBala* be = e->sacarBala(false, 20);
-		if (be) { balas->Agregar(be); Sonido::disparo(); }
+		if (CBala* be = e->sacarBala(false, 20)) balas->Agregar(be);
 	}
-	// 2) mover las balas y resolver choques
-	int antes = Enemigos->getRestantes();
-	int vidasAntes = jugador->getVidas();
-	balas->actualizar(mapa, jugador, Enemigos);
+}
 
-	// 3) avisar al estado de la partida (solo notifica si algo cambio)
-	// 3) avisar al estado de la partida y a los sonidos
-	EstadoPartida& estado = EstadoPartida::getInstancia();
-	int muertos = antes - Enemigos->getRestantes();
-	if (muertos > 0) {
-		estado.sumarPuntos(muertos * 100);
-		             
+void CControladora::reproducirSonidos() {
+	for (EEventoBala ev : balas->getEventos()) {
+		switch (ev) {
+		case EEventoBala::disparoJugador:
+		case EEventoBala::disparoEnemigo:    Sonido::disparo();   break;
+		case EEventoBala::ladrilloGolpeado:
+		case EEventoBala::enemigoGolpeado:
+		case EEventoBala::jugadorGolpeado:   Sonido::golpe();     break;
+		case EEventoBala::enemigoDestruido:
+		case EEventoBala::trofeoDestruido:   Sonido::explosion(); break;
+		}
 	}
-	if (jugador->getVidas() < vidasAntes) Sonido::golpe();   
+	balas->getEventos().clear();
+}
+
+void CControladora::actualizarEstado(int enemigosAntes) {
+	EstadoPartida& estado = EstadoPartida::getInstancia();
+	int muertos = enemigosAntes - Enemigos->getRestantes();
+	if (muertos > 0) estado.sumarPuntos(muertos * 100);
 	estado.setEnemigosRestantes(Enemigos->getRestantes());
 	estado.setVidas(jugador->getVidas());
 }

@@ -1,5 +1,5 @@
 #include "ColeccionBalas.h"
-#include "Sonido.h"
+//#include "Sonido.h"
 
 // Cuadro de explosion.png (0 = chico, 1 = mediano, 2 = grande) y cuantos ticks se ve cada tipo.
 static const int CUADRO_IMPACTO = 1, TICKS_IMPACTO = 3;
@@ -13,8 +13,10 @@ CColeccionBalas::~CColeccionBalas() {
 	balas.clear();
 }
 
-void CColeccionBalas::Agregar(CBala* bala) {
-	balas.push_back(bala);
+void CColeccionBalas::Agregar(CBala* b) {
+	balas.push_back(b);                      // tu código actual
+	eventos.push_back(b->esDelJugador() ? EEventoBala::disparoJugador
+		: EEventoBala::disparoEnemigo);
 }
 
 void CColeccionBalas::crearExplosion(int cx, int cy, bool grande, int tam) {
@@ -77,9 +79,9 @@ static bool solapa(CBala* b, CTanque* t) {
 	return solapaRect(b->getX(), b->getY(), CBala::TAM, CBala::TAM,
 		t->getX(), t->getY(), ANCHO_IMAGEN, ALTO_IMAGEN);
 }
+//
 
 void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemigos* enemigos) {
-	// las explosiones que ya estaban pierden un tick de vida
 	for (int i = (int)explosiones.size() - 1; i >= 0; i--)
 		if (--explosiones[i].restante <= 0)
 			explosiones.erase(explosiones.begin() + i);
@@ -96,32 +98,32 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 			b->desactivar();
 		}
 		else {
-			// 2) bloques que toca la caja de la bala (como maximo 2x2 celdas)
+			// 2) bloques
 			for (int f = f1; f <= f2 && b->estaActiva(); f++) {
 				for (int c = c1; c <= c2 && b->estaActiva(); c++) {
 					CBloque* bloque = mapa->getBloque(f, c);
 					if (bloque == nullptr) continue;
 					ETipoBloque t = bloque->getTipo();
 					if (t != ETipoBloque::destruible && t != ETipoBloque::noDestruible &&
-						t != ETipoBloque::trofeo) continue;      // piso, agua y arbol: la bala pasa
+						t != ETipoBloque::trofeo) continue;
 
 					int sx, sy, sw, sh;
 					rectSolido(bloque, f, c, sx, sy, sw, sh);
 					if (!solapaRect(b->getX(), b->getY(), CBala::TAM, CBala::TAM, sx, sy, sw, sh))
-						continue;                                // choca con la parte VACIA de la celda
+						continue;
 
 					if (t == ETipoBloque::destruible) {
 						golpearLadrillo(bloque, b->getDireccion());
-						Sonido::golpe();      // <-- suena al golpear/destruir el ladrillo
+						eventos.push_back(EEventoBala::ladrilloGolpeado);
 					}
 
 					if (t == ETipoBloque::trofeo && bloque->getDurabilidad() > 0) {
-						bloque->setDurabilidad(0);               // el aguila cae: Mapa la dibuja como TrofeoD
+						bloque->setDurabilidad(0);
 						crearExplosion(c * ANCHO_IMAGEN + ANCHO_IMAGEN / 2, f * ALTO_IMAGEN + ALTO_IMAGEN / 2, true, TAM_TROFEO);
-						Sonido::explosion();
+						eventos.push_back(EEventoBala::trofeoDestruido);
 					}
 					else {
-						explosionEnBala(b);                      // pared: explosion mediana
+						explosionEnBala(b);
 					}
 					b->desactivar();
 				}
@@ -135,23 +137,23 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 					CEnemigo* e = enemigos->getEnemigo(k);
 					if (solapa(b, e)) {
 						e->setVidas(e->getVidas() - 1);
-						Sonido::golpe();
 						if (e->getVidas() <= 0) {
 							crearExplosion(e->getX() + ANCHO_IMAGEN / 2, e->getY() + ALTO_IMAGEN / 2, true, TAM_ENEMIGO);
-							Sonido::explosion();
+							eventos.push_back(EEventoBala::enemigoDestruido);
 							enemigos->EliminarPorId(e->getId());
-							
 						}
 						else {
-							explosionEnBala(b);                  // golpe sin destruir
+							eventos.push_back(EEventoBala::enemigoGolpeado);
+							explosionEnBala(b);
 						}
 						b->desactivar();
-						break;   // la lista cambio, se sale del for
+						break;
 					}
 				}
 			}
 			else if (solapa(b, jugador)) {
 				jugador->setVidas(jugador->getVidas() - 1);
+				eventos.push_back(EEventoBala::jugadorGolpeado);
 				explosionEnBala(b);
 				b->desactivar();
 			}

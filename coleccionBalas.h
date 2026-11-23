@@ -20,4 +20,7 @@ public:
 	void actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemigos* enemigos);
 	// bmpExplosion = explosion.png: 3 cuadros de 64x64 (chico, mediano, grande)
 	void dibujar(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion);   // balas y explosiones
+	std::vector<EEventoBala>& getEventos() { return eventos; }
+private:
+	std::vector<EEventoBala> eventos;
 };

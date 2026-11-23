@@ -37,7 +37,13 @@ enum EDireccion {
 	derecha
 };
 
-class CComun {
-
+// eventos que ocurren al mover las balas (la controladora los traduce a sonido, estado, etc.)
+enum class EEventoBala {
+	disparoJugador,
+	disparoEnemigo,
+	ladrilloGolpeado,
+	enemigoGolpeado,
+	enemigoDestruido,
+	jugadorGolpeado,
+	trofeoDestruido
 };
-
