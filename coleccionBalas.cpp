@@ -33,7 +33,8 @@ static void golpearLadrillo(CBloque* b, EDireccion dirBala) {
 static void rectSolido(CBloque* bloque, int f, int c, int& x, int& y, int& w, int& h) {
 	x = c * ANCHO_IMAGEN;  y = f * ALTO_IMAGEN;
 	w = ANCHO_IMAGEN;      h = ALTO_IMAGEN;
-	if (bloque->getTipo() != ETipoBloque::destruible) return;
+	ETipoBloque t = bloque->getTipo();
+	if (t != ETipoBloque::destruible && t != ETipoBloque::noDestruible) return;   // el trofeo ocupa la celda entera
 	switch (bloque->getMitad()) {
 	case EMitadBloque::mitadArriba:    h = ALTO_IMAGEN / 2; break;
 	case EMitadBloque::mitadAbajo:     y += ALTO_IMAGEN / 2; h = ALTO_IMAGEN / 2; break;
@@ -102,7 +103,6 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 			else if (solapa(b, jugador)) {
 				jugador->setVidas(jugador->getVidas() - 1);
 				// TODO: si vidas <= 0 -> game over
-				std::cout << "Jugador impactado. Vidas: " << jugador->getVidas() << std::endl;
 				b->desactivar();
 			}
 		}

@@ -60,6 +60,7 @@ void CControladora::Inicializar() {
 	Enemigos->setColision(cadenaEnemigos, &contexto);
 	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
 	EstadoPartida::getInstancia().nuevaPartida(mapa->getNivel(), jugador->getVidas(), Enemigos->getRestantes());
+	Sonido::inicioNivel;
 
 }
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo) {
@@ -107,22 +108,28 @@ void CControladora::actualizarBalas() {
 	// 1) recoger los disparos pedidos
 	jugador->actualizarDisparo();
 	CBala* b = jugador->sacarBala(true, 5.5);
-	if (b) { balas->Agregar(b); Sonido::disparo(); }
+	if (b) { balas->Agregar(b);}
 
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
 		e->actualizarDisparo();
 		CBala* be = e->sacarBala(false, 20);
-		if (be) { balas->Agregar(be); Sonido::disparo(); }
+		if (be) { balas->Agregar(be); Sonido::disparo; }
 	}
 	// 2) mover las balas y resolver choques
 	int antes = Enemigos->getRestantes();
+	int vidasAntes = jugador->getVidas();
 	balas->actualizar(mapa, jugador, Enemigos);
 
 	// 3) avisar al estado de la partida (solo notifica si algo cambio)
+	// 3) avisar al estado de la partida y a los sonidos
 	EstadoPartida& estado = EstadoPartida::getInstancia();
 	int muertos = antes - Enemigos->getRestantes();
-	if (muertos > 0) estado.sumarPuntos(muertos * 100);      // 100 puntos por enemigo
+	if (muertos > 0) {
+		estado.sumarPuntos(muertos * 100);
+		Sonido::explosion();                                 // 
+	}
+	if (jugador->getVidas() < vidasAntes) Sonido::golpe();   // 
 	estado.setEnemigosRestantes(Enemigos->getRestantes());
 	estado.setVidas(jugador->getVidas());
 }
