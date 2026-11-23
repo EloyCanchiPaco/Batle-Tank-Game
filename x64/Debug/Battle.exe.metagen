@@ -30,3 +30,5 @@ Class Battle.Juego: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     Boolean teclaAbajo : Public
     Boolean teclaIzquierda : Public
     Boolean teclaDerecha : Public
+    System.Diagnostics.Stopwatch reloj : Public
+    Int64 ultimoTick : Public

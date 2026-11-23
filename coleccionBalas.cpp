@@ -110,10 +110,13 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 					if (!solapaRect(b->getX(), b->getY(), CBala::TAM, CBala::TAM, sx, sy, sw, sh))
 						continue;                                // choca con la parte VACIA de la celda
 
-					if (t == ETipoBloque::destruible) golpearLadrillo(bloque, b->getDireccion());
+					if (t == ETipoBloque::destruible) {
+						golpearLadrillo(bloque, b->getDireccion());
+						Sonido::golpe();      // <-- suena al golpear/destruir el ladrillo
+					}
 
 					if (t == ETipoBloque::trofeo && bloque->getDurabilidad() > 0) {
-						bloque->setDurabilidad(0);               // el aguila cae: Mapa la dibuja como bandera
+						bloque->setDurabilidad(0);               // el aguila cae: Mapa la dibuja como TrofeoD
 						crearExplosion(c * ANCHO_IMAGEN + ANCHO_IMAGEN / 2, f * ALTO_IMAGEN + ALTO_IMAGEN / 2, true, TAM_TROFEO);
 						Sonido::explosion();
 					}
@@ -132,9 +135,12 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 					CEnemigo* e = enemigos->getEnemigo(k);
 					if (solapa(b, e)) {
 						e->setVidas(e->getVidas() - 1);
+						Sonido::golpe();
 						if (e->getVidas() <= 0) {
 							crearExplosion(e->getX() + ANCHO_IMAGEN / 2, e->getY() + ALTO_IMAGEN / 2, true, TAM_ENEMIGO);
+							Sonido::explosion();
 							enemigos->EliminarPorId(e->getId());
+							
 						}
 						else {
 							explosionEnBala(b);                  // golpe sin destruir

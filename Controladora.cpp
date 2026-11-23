@@ -108,13 +108,13 @@ void CControladora::actualizarBalas() {
 	// 1) recoger los disparos pedidos
 	jugador->actualizarDisparo();
 	CBala* b = jugador->sacarBala(true, 5.5);
-	if (b) { balas->Agregar(b);}
+	if (b) { balas->Agregar(b); Sonido::disparo(); }
 
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
 		e->actualizarDisparo();
 		CBala* be = e->sacarBala(false, 20);
-		if (be) { balas->Agregar(be); Sonido::disparo; }
+		if (be) { balas->Agregar(be); Sonido::disparo(); }
 	}
 	// 2) mover las balas y resolver choques
 	int antes = Enemigos->getRestantes();
@@ -127,9 +127,9 @@ void CControladora::actualizarBalas() {
 	int muertos = antes - Enemigos->getRestantes();
 	if (muertos > 0) {
 		estado.sumarPuntos(muertos * 100);
-		Sonido::explosion();                                 // 
+		             
 	}
-	if (jugador->getVidas() < vidasAntes) Sonido::golpe();   // 
+	if (jugador->getVidas() < vidasAntes) Sonido::golpe();   
 	estado.setEnemigosRestantes(Enemigos->getRestantes());
 	estado.setVidas(jugador->getVidas());
 }

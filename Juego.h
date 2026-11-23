@@ -27,7 +27,8 @@ namespace Battle {
 		Bitmap^ bmpExplosion = gcnew Bitmap("imagenes\\explosion.png");
 		Bitmap^ bmpTrofeoD = gcnew Bitmap("imagenes\\trofeoD.png");
 		bool teclaArriba = false, teclaAbajo = false, teclaIzquierda = false, teclaDerecha = false;
-
+		System::Diagnostics::Stopwatch^ reloj = System::Diagnostics::Stopwatch::StartNew();
+		long long ultimoTick = 0;
 		Juego(void)
 		{
 			InitializeComponent();
@@ -94,6 +95,10 @@ namespace Battle {
 		}
 #pragma endregion
 	private: System::Void timer1_Tick(System::Object^ sender, System::EventArgs^ e) {
+		long long ahora = reloj->ElapsedMilliseconds;
+		this->Text = String::Format("tick: {0} ms", ahora - ultimoTick);
+		ultimoTick = ahora;
+		//
 		if (teclaArriba)    juego->MoverJugador(EDireccion::arriba);
 		else if (teclaAbajo)     juego->MoverJugador(EDireccion::abajo);
 		else if (teclaIzquierda) juego->MoverJugador(EDireccion::izquierda);
@@ -110,7 +115,8 @@ namespace Battle {
 		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala, bmpExplosion, bmpTrofeoD);
 		buffer->Render(g);
 
-		delete buffer, espacio, g;
+		delete buffer;
+		delete g;
 	}
 	private: System::Void Juego_Load(System::Object^ sender, System::EventArgs^ e) {
 		juego->Iniciar();
@@ -119,25 +125,26 @@ namespace Battle {
 
 		switch (e->KeyCode) {
 		case Keys::W:
-			std::cout << "Tecla arriba" << std::endl;
+			//std::cout << "Tecla arriba" << std::endl;
 			teclaArriba = true;
 			break;
 		case Keys::S:
-			std::cout << "Tecla abajo" << std::endl;
+			//std::cout << "Tecla abajo" << std::endl;
 			teclaAbajo = true;
 
 			break;
 		case Keys::A:
-			std::cout << "Tecla izquierda" << std::endl;
+			//std::cout << "Tecla izquierda" << std::endl;
 			teclaIzquierda = true;
 			break;
 		case Keys::D:
-			std::cout << "Tecla derecha" << std::endl;
+			//std::cout << "Tecla derecha" << std::endl;
 			teclaDerecha = true;
 			break;
 		case Keys::Space:
-			std::cout << "1: tecla espacio" << std::endl;
+			//std::cout << "1: tecla espacio" << std::endl;
 			juego->Disparar();
+			
 			break;
 		default:
 			break;

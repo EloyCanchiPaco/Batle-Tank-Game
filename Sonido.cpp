@@ -8,15 +8,16 @@
 #include <vector>
 #include <fstream>
 #include <iterator>
-#include <cstdio>
+#include <cstring>
 #pragma comment(lib, "winmm.lib")
 
 // Archivos esperados (en la carpeta "sonidos\" junto a "imagenes\"):
 //   disparo.wav  explosion.wav  golpe.wav  motor.wav  inicio.wav
 // Si algun sonido falla, el motivo aparece en la ventana "Salida" de Visual Studio.
 //
-// Los efectos (disparo, explosion, golpe, inicio) los reproduce un HILO APARTE:
-// el juego solo anota la orden en una cola y sigue, asi no se traba esperando al audio.
+// - Los efectos (disparo, explosion, golpe, inicio) los reproduce un HILO APARTE:
+//   el juego solo anota la orden en una cola y sigue.
+// - El motor usa waveOut con el dispositivo siempre abierto: solo se pausa/reanuda.
 
 enum Orden { ORD_DISPARO, ORD_EXPLOSION, ORD_GOLPE, ORD_INICIO };
 
@@ -34,7 +35,6 @@ static HANDLE hilo = NULL;
 static volatile bool terminar = false;
 
 static void encolar(int orden) {
-	printf("sonido: encolar %d (iniciado=%d)\n", orden, (int)iniciado);
 	if (!iniciado) return;
 	EnterCriticalSection(&candado);
 	if (cola.size() < 16) cola.push_back(orden);      // limite para que no se acumulen
@@ -42,10 +42,13 @@ static void encolar(int orden) {
 	SetEvent(evento);                                  // despierta al hilo
 }
 
-// ---------- Motor: PlaySound en bucle (el archivo se guarda en memoria) ----------
+// ---------- Motor: waveOut en bucle, dispositivo siempre abierto ----------
 static std::vector<char> datosMotor;
+static HWAVEOUT hWave = NULL;
+static WAVEHDR cabecera;
 static bool motorCargado = false;
 static bool motorCorriendo = false;
+static ULONGLONG ultimoMovimiento = 0;
 
 static void abrirMotor() {
 	std::ifstream f("sonidos\\motor.wav", std::ios::binary);
@@ -54,14 +57,62 @@ static void abrirMotor() {
 		return;
 	}
 	datosMotor.assign(std::istreambuf_iterator<char>(f), std::istreambuf_iterator<char>());
-	motorCargado = datosMotor.size() > 44;
-	if (!motorCargado) OutputDebugStringA("motor.wav: archivo vacio o invalido\n");
+	size_t n = datosMotor.size();
+	if (n < 44) {
+		OutputDebugStringA("motor.wav: archivo vacio o invalido\n");
+		return;
+	}
+
+	const char* p = datosMotor.data();
+	WAVEFORMATEX fmt;
+	ZeroMemory(&fmt, sizeof(fmt));
+	const char* datos = nullptr;
+	DWORD tam = 0;
+
+	// buscar los bloques "fmt " y "data" del WAV
+	size_t pos = 12;
+	while (pos + 8 <= n) {
+		DWORD sz = *(const DWORD*)(p + pos + 4);
+		if (memcmp(p + pos, "fmt ", 4) == 0 && pos + 8 + 16 <= n) {
+			memcpy(&fmt, p + pos + 8, 16);
+			fmt.cbSize = 0;
+		}
+		else if (memcmp(p + pos, "data", 4) == 0) {
+			datos = p + pos + 8;
+			tam = (DWORD)((pos + 8 + sz <= n) ? sz : n - pos - 8);
+			break;
+		}
+		pos += 8 + sz + (sz & 1);
+	}
+	if (!datos || fmt.nChannels == 0) {
+		OutputDebugStringA("motor.wav: formato no soportado (use PCM 16 bits)\n");
+		return;
+	}
+
+	if (waveOutOpen(&hWave, WAVE_MAPPER, &fmt, 0, 0, CALLBACK_NULL) != MMSYSERR_NOERROR) {
+		OutputDebugStringA("motor.wav: no se pudo abrir el dispositivo de audio\n");
+		return;
+	}
+
+	ZeroMemory(&cabecera, sizeof(cabecera));
+	cabecera.lpData = (LPSTR)datos;
+	cabecera.dwBufferLength = tam;
+	cabecera.dwFlags = WHDR_BEGINLOOP | WHDR_ENDLOOP;
+	cabecera.dwLoops = 0x7FFFFFFF;                     // bucle "infinito"
+	waveOutPrepareHeader(hWave, &cabecera, sizeof(WAVEHDR));
+	waveOutPause(hWave);                               // empieza en pausa
+	waveOutWrite(hWave, &cabecera, sizeof(WAVEHDR));
+	motorCargado = true;
 }
 
 static void cerrarMotor() {
-	PlaySoundA(NULL, NULL, 0);
-	motorCorriendo = false;
+	if (!motorCargado) return;
+	waveOutReset(hWave);
+	waveOutUnprepareHeader(hWave, &cabecera, sizeof(WAVEHDR));
+	waveOutClose(hWave);
+	hWave = NULL;
 	motorCargado = false;
+	motorCorriendo = false;
 }
 
 // ---------- Efectos por MCI (solo los usa el hilo de sonido) ----------
@@ -74,7 +125,7 @@ static void mci(const std::string& comando) {
 	if (err) {
 		char msg[256];
 		mciGetErrorStringA(err, msg, 256);
-		printf("MCI: %s -> %s\n", comando.c_str(), msg);
+		OutputDebugStringA((comando + " -> " + msg + "\n").c_str());
 	}
 }
 
@@ -91,7 +142,6 @@ static void reproducir(const char* nombre, int voces, int& siguiente) {
 
 // ---------- Hilo de sonido ----------
 static DWORD WINAPI hiloSonido(LPVOID) {
-	printf("hilo de sonido: iniciado\n");           
 	int sigDisparo = 0, sigExplosion = 0, sigGolpe = 0;
 
 	// abre los sonidos en este mismo hilo
@@ -99,7 +149,6 @@ static DWORD WINAPI hiloSonido(LPVOID) {
 	abrir("explosion", VOCES_EXPLOSION);
 	abrir("golpe", VOCES_GOLPE);
 	abrir("inicio", 1);
-	OutputDebugStringA("hilo de sonido: sonidos abiertos\n");    
 
 	while (true) {
 		WaitForSingleObject(evento, INFINITE);
@@ -111,7 +160,6 @@ static DWORD WINAPI hiloSonido(LPVOID) {
 		LeaveCriticalSection(&candado);
 
 		for (size_t i = 0; i < pendientes.size(); i++) {
-				printf("hilo de sonido: orden %d\n", pendientes[i]);
 			switch (pendientes[i]) {
 			case ORD_DISPARO:   reproducir("disparo", VOCES_DISPARO, sigDisparo); break;
 			case ORD_EXPLOSION: reproducir("explosion", VOCES_EXPLOSION, sigExplosion); break;
@@ -157,13 +205,17 @@ void Sonido::inicioNivel() { encolar(ORD_INICIO); }
 
 void Sonido::motor(bool moviendose) {
 	if (!iniciado || !motorCargado) return;
-	if (moviendose && !motorCorriendo) {
-		if (!PlaySoundA(datosMotor.data(), NULL, SND_MEMORY | SND_ASYNC | SND_LOOP | SND_NODEFAULT))
-			OutputDebugStringA("motor.wav: PlaySound no pudo reproducirlo (formato no soportado?)\n");
-		motorCorriendo = true;
+	ULONGLONG ahora = GetTickCount64();
+
+	if (moviendose) {
+		ultimoMovimiento = ahora;
+		if (!motorCorriendo) {
+			waveOutRestart(hWave);
+			motorCorriendo = true;
+		}
 	}
-	else if (!moviendose && motorCorriendo) {
-		PlaySoundA(NULL, NULL, 0);
+	else if (motorCorriendo && ahora - ultimoMovimiento > 80) {   // 80 ms de gracia
+		waveOutPause(hWave);
 		motorCorriendo = false;
 	}
 }
