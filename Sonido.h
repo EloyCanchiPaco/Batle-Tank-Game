@@ -1,13 +1,39 @@
 #pragma once
 
-class Sonido {
-public:
-	static void iniciar();                 // abre los .wav (se puede llamar varias veces)
-	static void cerrar();                  // libera los sonidos
+// Estructura con los detalles de Windows (hilo, cola, dispositivos de audio).
+// Solo se define en Sonido.cpp, asi este header no depende de windows.h
+struct DatosSonido;
 
-	static void disparo();                 // el jugador dispara
-	static void explosion();               // un enemigo destruido
-	static void golpe();                   // el jugador recibe un impacto
-	static void inicioNivel();             // empieza el nivel
-	static void motor(bool moviendose);    // sonido continuo mientras el jugador se mueve
+// Singleton: un unico objeto de sonido para todo el juego.
+// Uso:  CSonido::getInstancia().disparo();
+class CSonido {
+public:
+	static CSonido& getInstancia();
+
+	void iniciar();                        // abre los .wav (se puede llamar varias veces)
+	void cerrar();                         // libera los sonidos
+
+	// efectos puntuales
+	void disparo();                        // se creo una bala
+	void explosion();                      // un enemigo o el trofeo destruido
+	void golpe();                          // impacto de una bala
+	void inicioNivel();                    // jingle de inicio de nivel
+
+	// sonidos continuos
+	void motor(bool moviendose);           // mientras el jugador se mueve
+	void musica(bool sonar);               // musica de fondo en bucle
+
+	// volumen: 0.0 a 1.0 (para el menu)
+	void  setVolumenMusica(float v);
+	void  setVolumenEfectos(float v);      // efectos y motor
+	float getVolumenMusica() const;
+	float getVolumenEfectos() const;
+
+private:
+	CSonido();                             // constructor privado: nadie crea otros objetos
+	~CSonido();
+	CSonido(const CSonido&) = delete;      // no se puede copiar
+	CSonido& operator=(const CSonido&) = delete;
+
+	DatosSonido* d;
 };

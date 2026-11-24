@@ -190,7 +190,7 @@ void CPanelHUD::dibujar(Graphics^ g) {
 	const char* col1 = "BATTLE";
 	const char* col2 = "CITY";
 	const int ESC_T = 9;                                   // tamano de cada letra
-	const int GRUESO = ESC_T / 2;                          // trazos mas gruesos
+	const int GRUESO = ESC_T / 3;                          // trazos mas gruesos
 	const int PASO_T = 110;                                // distancia vertical entre letras
 	const int SEP = 20;                                    // separacion entre las dos columnas
 	int anchoLetra = 5 * ESC_T + GRUESO;

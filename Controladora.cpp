@@ -38,11 +38,11 @@ balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr), hud(nullptr) {
 	hud = new CPanelHUD();
 	EstadoPartida::getInstancia().agregarObservador(hud);   // el panel se suscribe
 
-	Sonido::iniciar();
+	CSonido::getInstancia().iniciar();
 }
-//
+//destructor
 CControladora::~CControladora() {
-	Sonido::cerrar();
+	CSonido::getInstancia().cerrar();
 	EstadoPartida::getInstancia().quitarObservador(hud);
 	delete hud;
 	delete mapa;
@@ -60,7 +60,8 @@ void CControladora::Inicializar() {
 	Enemigos->setColision(cadenaEnemigos, &contexto);
 	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
 	EstadoPartida::getInstancia().nuevaPartida(mapa->getNivel(), jugador->getVidas(), Enemigos->getRestantes());
-	Sonido::inicioNivel;
+	CSonido::getInstancia().inicioNivel();     // opcional
+	CSonido::getInstancia().musica(true);
 
 }
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD) {
@@ -81,16 +82,16 @@ void CControladora::moverJugador() {
 	if (jugador->puedeAvanzar()) { // pregunta a la cadena de colisiones
 		jugador->mover();
 		jugador->animar();
-		Sonido::motor(true);
+		CSonido::getInstancia().motor(true);
 	}
 	else {
-		Sonido::motor(false);   // choco contra algo
+		CSonido::getInstancia().motor(false);    // choco contra algo
 	}
 }
 
 // Ninguna tecla presionada: silenciar el motor
 void CControladora::detenerJugador() {
-	Sonido::motor(false);
+	CSonido::getInstancia().motor(false);
 }
 
 void CControladora::moverEnemigos() {
@@ -124,15 +125,16 @@ void CControladora::recogerDisparos() {
 }
 
 void CControladora::reproducirSonidos() {
+	CSonido& sonido = CSonido::getInstancia();
 	for (EEventoBala ev : balas->getEventos()) {
 		switch (ev) {
 		case EEventoBala::disparoJugador:
-		case EEventoBala::disparoEnemigo:    Sonido::disparo();   break;
+		case EEventoBala::disparoEnemigo:    sonido.disparo();   break;
 		case EEventoBala::ladrilloGolpeado:
 		case EEventoBala::enemigoGolpeado:
-		case EEventoBala::jugadorGolpeado:   Sonido::golpe();     break;
+		case EEventoBala::jugadorGolpeado:   sonido.golpe();     break;
 		case EEventoBala::enemigoDestruido:
-		case EEventoBala::trofeoDestruido:   Sonido::explosion(); break;
+		case EEventoBala::trofeoDestruido:   sonido.explosion(); break;
 		}
 	}
 	balas->getEventos().clear();
