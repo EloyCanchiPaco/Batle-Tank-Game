@@ -12,8 +12,8 @@ CEnemigo* CEnemigoFactory::CrearEnemigo(ETipoTanque tipo, short id, int fila, in
     case ETipoTanque::tipo1: vidas = 1; velocidad = 4;  creacion = &t1; break;  // básico
     case ETipoTanque::tipo2: vidas = 2; velocidad = 4;  creacion = &t2; break;  // fuerte
     case ETipoTanque::tipo3: vidas = 2; velocidad = 4;  creacion = &t3; break;
-    case ETipoTanque::tipo4: vidas = 3; velocidad = 8;  creacion = &t4; break;
-    case ETipoTanque::tipo5: vidas = 4; velocidad = 4;  creacion = &t5; break;
+    case ETipoTanque::tipo4: vidas = 2; velocidad = 8;  creacion = &t4; break;
+    case ETipoTanque::tipo5: vidas = 3; velocidad = 4;  creacion = &t5; break;
     }
     CEnemigo* enemigo = new CEnemigo(id, tipo, fila, columna, vidas);
     enemigo->setTipo(tipo);

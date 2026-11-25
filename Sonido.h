@@ -17,11 +17,11 @@ public:
 	void disparo();                        // se creo una bala
 	void explosion();                      // un enemigo o el trofeo destruido
 	void golpe();                          // impacto de una bala
-	void inicioNivel();                    // jingle de inicio de nivel
 
 	// sonidos continuos
 	void motor(bool moviendose);           // mientras el jugador se mueve
-	void musica(bool sonar);               // musica de fondo en bucle
+	void musica(bool sonar);               // musica de fondo en bucle (durante la partida)
+	void musicaMenu(bool sonar);           // musica del menu (inicio.wav) en bucle
 
 	// volumen: 0.0 a 1.0 (para el menu)
 	void  setVolumenMusica(float v);

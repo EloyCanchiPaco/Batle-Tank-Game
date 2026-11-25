@@ -26,9 +26,7 @@ Class Battle.Juego: AutoLayout, AnsiClass, Class, Public, BeforeFieldInit
     System.Drawing.Bitmap bmpBala : Public
     System.Drawing.Bitmap bmpExplosion : Public
     System.Drawing.Bitmap bmpTrofeoD : Public
-    Boolean teclaArriba : Public
-    Boolean teclaAbajo : Public
-    Boolean teclaIzquierda : Public
-    Boolean teclaDerecha : Public
+    Recursos* recursos : Public
+    ContextoJuego* contexto : Public
     System.Diagnostics.Stopwatch reloj : Public
     Int64 ultimoTick : Public

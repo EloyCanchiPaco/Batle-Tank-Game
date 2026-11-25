@@ -10,7 +10,8 @@ public:
 	CJuegoFacade();
 	~CJuegoFacade();
 
-	void Iniciar();
+	void Iniciar(int nivel);    // partida nueva del nivel indicado (descarta la anterior)
+	bool HaPerdido();            // true si se destruyo el trofeo o el jugador no tiene vidas
 	void Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
 		Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala, Bitmap^ bmpExplosion, Bitmap^ bmpTrofeoD);
 	void MoverJugador(EDireccion direccion);
@@ -19,7 +20,7 @@ public:
 	void Disparar();
 	void ActualizarBalas();
 
-	
+
 };
 
 

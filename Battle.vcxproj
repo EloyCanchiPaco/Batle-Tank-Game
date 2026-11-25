@@ -131,6 +131,9 @@
     <ClCompile Include="ColeccionEnemigos.cpp" />
     <ClCompile Include="Colision.cpp" />
     <ClCompile Include="EnemigoFactory.cpp" />
+    <ClCompile Include="EstadoGameOver.cpp" />
+    <ClCompile Include="EstadoJuego.cpp" />
+    <ClCompile Include="EstadoMenu.cpp" />
     <ClCompile Include="EstadoPartida.cpp" />
     <ClCompile Include="EstrategiaAleatoria.cpp" />
     <ClCompile Include="EstrategiaCreacion.cpp" />
@@ -144,7 +147,6 @@
     <ClCompile Include="Juego.cpp" />
     <ClCompile Include="Jugador.cpp" />
     <ClCompile Include="PanelHUD.cpp" />
-    <ClCompile Include="Powerup.cpp" />
     <ClCompile Include="Sonido.cpp" />
     <ClCompile Include="Tanque.cpp" />
   </ItemGroup>
@@ -156,6 +158,9 @@
     <ClInclude Include="Colision.h" />
     <ClInclude Include="Comun.h" />
     <ClInclude Include="EnemigoFactory.h" />
+    <ClInclude Include="EstadoGameOver.h" />
+    <ClInclude Include="EstadoJuego.h" />
+    <ClInclude Include="EstadoMenu.h" />
     <ClInclude Include="EstadoPartida.h" />
     <ClInclude Include="Estrategia.h" />
     <ClInclude Include="EstrategiaAleatoria.h" />
@@ -164,6 +169,7 @@
     <ClInclude Include="EstrategiaJugador.h" />
     <ClInclude Include="EstrategiaTrofeo.h" />
     <ClInclude Include="EstrategiaVelocidad.h" />
+    <ClInclude Include="FuentePixel.h" />
     <ClInclude Include="JuegoFacade.h" />
     <ClInclude Include="Mapa.h" />
     <ClInclude Include="Controladora.h" />
@@ -174,7 +180,6 @@
     <ClInclude Include="Jugador.h" />
     <ClInclude Include="Observador.h" />
     <ClInclude Include="PanelHUD.h" />
-    <ClInclude Include="Powerup.h" />
     <ClInclude Include="Sonido.h" />
     <ClInclude Include="Tanque.h" />
   </ItemGroup>

@@ -216,7 +216,7 @@ private:
 // =====================================================================
 //  Datos internos de CSonido
 // =====================================================================
-enum Orden { ORD_DISPARO, ORD_EXPLOSION, ORD_GOLPE, ORD_INICIO };
+enum Orden { ORD_DISPARO, ORD_EXPLOSION, ORD_GOLPE };
 
 struct DatosSonido {
 	bool iniciado = false;
@@ -229,11 +229,12 @@ struct DatosSonido {
 	volatile bool terminar = false;
 
 	// efectos
-	CEfectoSonido efDisparo, efExplosion, efGolpe, efInicio;
+	CEfectoSonido efDisparo, efExplosion, efGolpe;
 
 	// sonidos en bucle
 	CBucleSonido motor;
 	CBucleSonido musica;
+	CBucleSonido musicaMenu;                          // inicio.wav: suena en el menu
 
 	float volMusica = 0.5f;                           // 30 % por defecto
 	float volEfectos = 0.1f;
@@ -265,7 +266,6 @@ static DWORD WINAPI hiloSonido(LPVOID param) {
 			case ORD_DISPARO:   d->efDisparo.reproducir(); break;
 			case ORD_EXPLOSION: d->efExplosion.reproducir(); break;
 			case ORD_GOLPE:     d->efGolpe.reproducir(); break;
-			case ORD_INICIO:    d->efInicio.reproducir(); break;
 			}
 		}
 	}
@@ -298,16 +298,16 @@ void CSonido::iniciar() {
 	d->efDisparo.setVolumen(d->volEfectos);
 	d->efExplosion.setVolumen(d->volEfectos);
 	d->efGolpe.setVolumen(d->volEfectos);
-	d->efInicio.setVolumen(d->volEfectos);
 	d->motor.setVolumen(d->volEfectos);
 	d->musica.setVolumen(d->volMusica);
+	d->musicaMenu.setVolumen(d->volMusica);
 
 	d->efDisparo.abrir("sonidos\\disparo.wav", 3);
 	d->efExplosion.abrir("sonidos\\explosion.wav", 3);
 	d->efGolpe.abrir("sonidos\\golpe.wav", 2);
-	d->efInicio.abrir("sonidos\\inicio.wav", 1);
 	d->motor.abrir("sonidos\\motor.wav");
 	d->musica.abrir("sonidos\\musica.wav");
+	d->musicaMenu.abrir("sonidos\\inicio.wav");
 
 	d->iniciado = true;
 	d->hilo = CreateThread(NULL, 0, hiloSonido, d, 0, NULL);
@@ -328,15 +328,14 @@ void CSonido::cerrar() {
 	d->efDisparo.cerrar();
 	d->efExplosion.cerrar();
 	d->efGolpe.cerrar();
-	d->efInicio.cerrar();
 	d->motor.cerrar();
 	d->musica.cerrar();
+	d->musicaMenu.cerrar();
 }
 
 void CSonido::disparo() { encolar(d, ORD_DISPARO); }
 void CSonido::explosion() { encolar(d, ORD_EXPLOSION); }
 void CSonido::golpe() { encolar(d, ORD_GOLPE); }
-void CSonido::inicioNivel() { encolar(d, ORD_INICIO); }
 
 void CSonido::motor(bool moviendose) {
 	if (!d->iniciado) return;
@@ -356,11 +355,18 @@ void CSonido::musica(bool sonar) {
 	else d->musica.pausar();
 }
 
+void CSonido::musicaMenu(bool sonar) {
+	if (!d->iniciado) return;
+	if (sonar) d->musicaMenu.reanudar();
+	else d->musicaMenu.pausar();
+}
+
 static float limitar(float v) { return v < 0.0f ? 0.0f : (v > 1.0f ? 1.0f : v); }
 
 void CSonido::setVolumenMusica(float v) {
 	d->volMusica = limitar(v);
 	d->musica.setVolumen(d->volMusica);
+	d->musicaMenu.setVolumen(d->volMusica);
 }
 
 void CSonido::setVolumenEfectos(float v) {
@@ -368,7 +374,6 @@ void CSonido::setVolumenEfectos(float v) {
 	d->efDisparo.setVolumen(d->volEfectos);
 	d->efExplosion.setVolumen(d->volEfectos);
 	d->efGolpe.setVolumen(d->volEfectos);
-	d->efInicio.setVolumen(d->volEfectos);
 	d->motor.setVolumen(d->volEfectos);
 }
 

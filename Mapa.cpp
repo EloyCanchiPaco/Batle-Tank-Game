@@ -3,9 +3,28 @@
 static const int COL_TROFEO_DESTRUIDO = 1;    // columna (de 64 px) donde esta la bandera dentro de trofeo.png
 
 CMapa::CMapa() {
-	nivel = 1;
-	tipoPiso = ETipoPiso::TierraClara;
+    nivel = 1;
+    tipoPiso = ETipoPiso::TierraClara;
+    for (int i = 0; i < MAX_FILAS; i++)
+        for (int j = 0; j < MAX_COLUMNAS; j++) mapa[i][j] = nullptr;
 };
+
+// Ahora se crea un mapa por partida, asi que libera sus bloques
+CMapa::~CMapa() {
+    for (int i = 0; i < MAX_FILAS; i++)
+        for (int j = 0; j < MAX_COLUMNAS; j++) delete mapa[i][j];
+}
+
+// Carga el nivel 1..5 (cualquier otro numero carga el 1)
+void CMapa::cargarNivel(int nivel, ETipoPiso PisoDeseado) {
+    switch (nivel) {
+    case 2:  nivel2(PisoDeseado); break;
+    case 3:  nivel3(PisoDeseado); break;
+    case 4:  nivel4(PisoDeseado); break;
+    case 5:  nivel5(PisoDeseado); break;
+    default: nivel1(PisoDeseado); break;
+    }
+}
 
 void CMapa::setNivel(int nivel) {
     this->nivel = nivel;
@@ -24,7 +43,7 @@ CBloque* (*CMapa::getMapa())[MAX_COLUMNAS] {
 }
 
 void CMapa::nivel1(ETipoPiso PisoDeseado) {
-	this->nivel = 1;
+    this->nivel = 1;
     this->tipoPiso = PisoDeseado;
     int tmpNivel1[MAX_FILAS][MAX_COLUMNAS] = {
         1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -95,7 +114,7 @@ void CMapa::nivel1(ETipoPiso PisoDeseado) {
 }
 
 void CMapa::nivel2(ETipoPiso PisoDeseado) {
-	this->nivel = 2;
+    this->nivel = 2;
     this->tipoPiso = PisoDeseado;
     int tmpNivel2[MAX_FILAS][MAX_COLUMNAS] = {
      1,  1,  1,  1,  2,  2,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -119,7 +138,7 @@ void CMapa::nivel2(ETipoPiso PisoDeseado) {
             if (tmpNivel2[i][j] == 1) {
                 mapa[i][j] = new CBloque(ETipoBloque::piso, 0);
             }
-			// 2 es un bloque destruible
+            // 2 es un bloque destruible
             if (tmpNivel2[i][j] == 2) {
                 mapa[i][j] = new CBloque(ETipoBloque::destruible, 2);
             }
@@ -135,7 +154,7 @@ void CMapa::nivel2(ETipoPiso PisoDeseado) {
             if (tmpNivel2[i][j] == 24) {
                 mapa[i][j] = new CBloque(ETipoBloque::destruible, 2, EMitadBloque::mitadIzquierda);
             }
-			//bloque no destruible
+            //bloque no destruible
             if (tmpNivel2[i][j] == 3) {
                 mapa[i][j] = new CBloque(ETipoBloque::noDestruible, -1);
             }
@@ -152,7 +171,7 @@ void CMapa::nivel2(ETipoPiso PisoDeseado) {
                 mapa[i][j] = new CBloque(ETipoBloque::noDestruible, -1, EMitadBloque::mitadDerecha);
             }
             if (tmpNivel2[i][j] == 4) {
-				mapa[i][j] = new CBloque(ETipoBloque::agua, 0);
+                mapa[i][j] = new CBloque(ETipoBloque::agua, 0);
             }
             if (tmpNivel2[i][j] == 5) {
                 mapa[i][j] = new CBloque(ETipoBloque::arbol, 0);
@@ -167,7 +186,7 @@ void CMapa::nivel2(ETipoPiso PisoDeseado) {
 }
 //nivel 3
 void CMapa::nivel3(ETipoPiso PisoDeseado) {
-	this->nivel = 3;
+    this->nivel = 3;
     this->tipoPiso = PisoDeseado;
     int tmpNivel3[MAX_FILAS][MAX_COLUMNAS] = {
      1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,  1,
@@ -238,8 +257,8 @@ void CMapa::nivel3(ETipoPiso PisoDeseado) {
 
 //nivel 4
 void CMapa::nivel4(ETipoPiso PisoDeseado) {
-	this->nivel = 4;
-	this->tipoPiso = PisoDeseado;
+    this->nivel = 4;
+    this->tipoPiso = PisoDeseado;
     int tmpNivel4[MAX_FILAS][MAX_COLUMNAS] = {
      1,  5,  5,  1,  1,  1,  1,  1,  1,  1,  1,  5,  1,  1,
      5,  5,  1,  1, 22,  2,  2, 22, 22,  1,  1,  1,  5,  1,
@@ -308,8 +327,8 @@ void CMapa::nivel4(ETipoPiso PisoDeseado) {
 }
 // nivel 5
 void CMapa::nivel5(ETipoPiso PisoDeseado) {
-	this->nivel = 5;
-	this->tipoPiso = PisoDeseado;
+    this->nivel = 5;
+    this->tipoPiso = PisoDeseado;
     int tmpNivel5[MAX_FILAS][MAX_COLUMNAS] = {
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
       1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1,
@@ -382,7 +401,7 @@ void CMapa::nivel5(ETipoPiso PisoDeseado) {
 void CMapa::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD) {
     int X = 0, Y = 0;
     int columna = this->tipoPiso % 2;
-	int fila = this->tipoPiso / 2;
+    int fila = this->tipoPiso / 2;
 
     for (int i = 0; i < MAX_FILAS; i++) {
         X = 0;
@@ -421,7 +440,7 @@ void CMapa::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap
                 Rectangle rectDestruible = Rectangle(1 * ANCHO_IMAGEN, 0 * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN);
                 Rectangle zoom = Rectangle(X, Y, ANCHO_IMAGEN * 1.0, ALTO_IMAGEN * 1.0);
 
-                // si es una mitad, se reemplazan los dos rectángulos por la versión recortada
+                // si es una mitad, se reemplazan los dos rect ngulos por la versi n recortada
                 if (mitad == EMitadBloque::mitadArriba) {
                     rectDestruible = Rectangle(1 * ANCHO_IMAGEN, 0 * ALTO_IMAGEN, ANCHO_IMAGEN, ALTO_IMAGEN / 2);
                     zoom = Rectangle(X, Y, ANCHO_IMAGEN, ALTO_IMAGEN / 2);

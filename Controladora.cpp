@@ -42,30 +42,41 @@ balas(nullptr), cadenaJugador(nullptr), cadenaEnemigos(nullptr), hud(nullptr) {
 }
 //destructor
 CControladora::~CControladora() {
-	CSonido::getInstancia().cerrar();
+	// (el sonido NO se cierra aqui: el menu tambien lo usa y CSonido se cierra solo al terminar el programa)
 	EstadoPartida::getInstancia().quitarObservador(hud);
 	delete hud;
-	delete mapa;
-	delete jugador;
 	delete Enemigos;
+	delete jugador;
 	delete trofeo;
 	delete balas;
 	delete cadenaJugador;       // borra tambien los eslabones siguientes
 	delete cadenaEnemigos;
+	delete mapa;
 }
 
-void CControladora::Inicializar() {
+void CControladora::Inicializar(int nivel) {
+	derrota = false;
+		derrota = false;
 
-	mapa->nivel2(ETipoPiso::TierraClara); //TierraClara, tierraOscura, pastoLiso, pastoDetalles, pisoOscuro
+	// un piso distinto por nivel (posicion 0 = nivel 1, ... posicion 4 = nivel 5)
+	ETipoPiso pisos[] = {
+		ETipoPiso::TierraClara,     // nivel 1
+		ETipoPiso::tierraOscura,    // nivel 2
+		ETipoPiso::pastoLiso,       // nivel 3
+		ETipoPiso::pastoDetalles,   // nivel 4
+		ETipoPiso::pisoOscuro       // nivel 5
+	};
+	int indice = (nivel >= 1 && nivel <= 5) ? nivel - 1 : 0;   // evita salirse de la tabla
+
+	mapa->cargarNivel(nivel, pisos[indice]);
 	Enemigos->setColision(cadenaEnemigos, &contexto);
 	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
 	EstadoPartida::getInstancia().nuevaPartida(mapa->getNivel(), jugador->getVidas(), Enemigos->getRestantes());
-	CSonido::getInstancia().inicioNivel();     // opcional
 	CSonido::getInstancia().musica(true);
 
 }
 void CControladora::DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD) {
-	mapa->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo,bmpTrofeoD);
+	mapa->DibujarMapa(g, bmpPiso, bmpBloques, bmpTrofeo, bmpTrofeoD);
 };
 
 //dibujar tanques
@@ -115,7 +126,7 @@ void CControladora::actualizarBalas() {
 
 void CControladora::recogerDisparos() {
 	jugador->actualizarDisparo();
-	if (CBala* b = jugador->sacarBala(true, 5.5)) balas->Agregar(b);
+	if (CBala* b = jugador->sacarBala(true, 5)) balas->Agregar(b);
 
 	for (int i = 0; i < Enemigos->getCantidad(); i++) {
 		CEnemigo* e = Enemigos->getEnemigo(i);
@@ -133,8 +144,8 @@ void CControladora::reproducirSonidos() {
 		case EEventoBala::ladrilloGolpeado:
 		case EEventoBala::enemigoGolpeado:
 		case EEventoBala::jugadorGolpeado:   sonido.golpe();     break;
-		case EEventoBala::enemigoDestruido:
-		case EEventoBala::trofeoDestruido:   sonido.explosion(); break;
+		case EEventoBala::enemigoDestruido:  sonido.explosion(); break;
+		case EEventoBala::trofeoDestruido:   sonido.explosion(); derrota = true; break;   // sin trofeo se pierde
 		}
 	}
 	balas->getEventos().clear();
@@ -146,10 +157,15 @@ void CControladora::actualizarEstado(int enemigosAntes) {
 	if (muertos > 0) estado.sumarPuntos(muertos * 100);
 	estado.setEnemigosRestantes(Enemigos->getRestantes());
 	estado.setVidas(jugador->getVidas());
+	if (jugador->getVidas() <= 0) derrota = true;      // sin vidas se pierde
+}
+
+bool CControladora::haPerdido() {
+	return derrota;
 }
 
 void CControladora::DibujarBalas(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion) {
-	balas->dibujar(g, bmpBala,bmpExplosion);
+	balas->dibujar(g, bmpBala, bmpExplosion);
 }
 void CControladora::DibujarHUD(Graphics^ g) {
 	hud->dibujar(g);
@@ -162,4 +178,4 @@ void CControladora::DibujarHUD(Graphics^ g) {
 //practica final,no es codigo ,hacer diagrama separando las clases especificas ,diagrama completo con las capaz despectivas (presentacion y negicion) 2 layer 
 //practica  7:Diagrama de clases completo 
 // incluir m-LAy o MVC
-//examen final juego con 6 patrones de diseño
+//examen final juego con 6 patrones de dise o

@@ -1,5 +1,6 @@
 #pragma once
 #include "JuegoFacade.h"
+#include "EstadoJuego.h"
 #include <windows.h>
 #pragma comment(lib, "user32.lib")
 namespace Battle {
@@ -26,7 +27,8 @@ namespace Battle {
 		Bitmap^ bmpBala = gcnew Bitmap("imagenes\\bala.png");
 		Bitmap^ bmpExplosion = gcnew Bitmap("imagenes\\explosion.png");
 		Bitmap^ bmpTrofeoD = gcnew Bitmap("imagenes\\trofeoD.png");
-		bool teclaArriba = false, teclaAbajo = false, teclaIzquierda = false, teclaDerecha = false;
+		Recursos* recursos = new Recursos();          // imagenes compartidas por todos los estados
+		ContextoJuego* contexto = nullptr;           // PATRON STATE: menu / jugando / game over
 		System::Diagnostics::Stopwatch^ reloj = System::Diagnostics::Stopwatch::StartNew();
 		long long ultimoTick = 0;
 		Juego(void)
@@ -35,15 +37,23 @@ namespace Battle {
 			bmpTanques->MakeTransparent(Color::Yellow);
 			bmpExplosion->MakeTransparent(Color::Yellow);
 			bmpTrofeo->MakeTransparent(Color::Black);
+			recursos->piso = bmpPiso;
+			recursos->bloques = bmpBloques;
+			recursos->trofeo = bmpTrofeo;
+			recursos->tanques = bmpTanques;
+			recursos->bala = bmpBala;
+			recursos->explosion = bmpExplosion;
+			recursos->trofeoD = bmpTrofeoD;
+			contexto = new ContextoJuego(juego, recursos);
 			//
-			//TODO: agregar código de constructor aquí
+			//TODO: agregar c digo de constructor aqu 
 			//
 			//bmpPiso->MakeTransparent(bmpPiso->GetPixel(0, 0));
 		}
 
 	protected:
 		/// <summary>
-		/// Limpiar los recursos que se estén usando.
+		/// Limpiar los recursos que se est n usando.
 		/// </summary>
 		/// 
 		~Juego()
@@ -52,6 +62,8 @@ namespace Battle {
 			{
 				delete components;
 			}
+			delete contexto;
+			delete recursos;
 		}
 	private: System::Windows::Forms::Timer^ timer1;
 	protected:
@@ -59,14 +71,14 @@ namespace Battle {
 	private: System::ComponentModel::IContainer^ components;
 	private:
 		/// <summary>
-		/// Variable del diseñador necesaria.
+		/// Variable del dise ador necesaria.
 		/// </summary>
 
 
 #pragma region Windows Form Designer generated code
 		/// <summary>
-		/// Método necesario para admitir el Diseñador. No se puede modificar
-		/// el contenido de este método con el editor de código.
+		/// M todo necesario para admitir el Dise ador. No se puede modificar
+		/// el contenido de este m todo con el editor de c digo.
 		/// </summary>
 		void InitializeComponent(void)
 		{
@@ -98,65 +110,48 @@ namespace Battle {
 		long long ahora = reloj->ElapsedMilliseconds;
 		this->Text = String::Format("tick: {0} ms", ahora - ultimoTick);
 		ultimoTick = ahora;
-		//
-		if (teclaArriba)    juego->MoverJugador(EDireccion::arriba);
-		else if (teclaAbajo)     juego->MoverJugador(EDireccion::abajo);
-		else if (teclaIzquierda) juego->MoverJugador(EDireccion::izquierda);
-		else if (teclaDerecha)   juego->MoverJugador(EDireccion::derecha);
-		else juego->DetenerJugador();
 
-		juego->MoverEnemigos();
-		juego->ActualizarBalas();
+		contexto->actualizar();                    // el estado actual hace su logica
+
 		Graphics^ g = this->CreateGraphics();
 		BufferedGraphicsContext^ espacio = BufferedGraphicsManager::Current;
 		BufferedGraphics^ buffer = espacio->Allocate(g, this->ClientRectangle);
 
-
-		juego->Dibujar(buffer->Graphics, bmpPiso, bmpBloques, bmpTrofeo, bmpTanques, bmpBala, bmpExplosion, bmpTrofeoD);
+		contexto->dibujar(buffer->Graphics, this->ClientRectangle.Width, this->ClientRectangle.Height);
 		buffer->Render(g);
 
 		delete buffer;
 		delete g;
 	}
 	private: System::Void Juego_Load(System::Object^ sender, System::EventArgs^ e) {
-		juego->Iniciar();
+		contexto->cambiarA(EEstado::menu);         // el juego arranca en el menu
 	}
 	private: System::Void Juego_KeyDown(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
-
-		switch (e->KeyCode) {
-		case Keys::W:
-			//std::cout << "Tecla arriba" << std::endl;
-			teclaArriba = true;
-			break;
-		case Keys::S:
-			//std::cout << "Tecla abajo" << std::endl;
-			teclaAbajo = true;
-
-			break;
-		case Keys::A:
-			//std::cout << "Tecla izquierda" << std::endl;
-			teclaIzquierda = true;
-			break;
-		case Keys::D:
-			//std::cout << "Tecla derecha" << std::endl;
-			teclaDerecha = true;
-			break;
-		case Keys::Space:
-			//std::cout << "1: tecla espacio" << std::endl;
-			juego->Disparar();
-			
-			break;
-		default:
-			break;
+		ETecla tecla = Traducir(e->KeyCode);
+		if (tecla != ETecla::ninguna) {
+			contexto->teclaPresionada(tecla);
+			e->Handled = true;
 		}
 	}
 	private: System::Void Juego_KeyUp(System::Object^ sender, System::Windows::Forms::KeyEventArgs^ e) {
-		switch (e->KeyCode) {
-		case Keys::W:    teclaArriba = false;    break;
-		case Keys::S:  teclaAbajo = false;     break;
-		case Keys::A:  teclaIzquierda = false; break;
-		case Keys::D: teclaDerecha = false;   break;
-		default: break;
+		ETecla tecla = Traducir(e->KeyCode);
+		if (tecla != ETecla::ninguna) {
+			contexto->teclaSoltada(tecla);
+			e->Handled = true;
+		}
+	}
+
+		   // Traduce la tecla de WinForms a una accion del juego (los estados no conocen WinForms)
+	private: static ETecla Traducir(System::Windows::Forms::Keys tecla) {
+		switch (tecla) {
+		case Keys::W: case Keys::Up:      return ETecla::arriba;
+		case Keys::S: case Keys::Down:    return ETecla::abajo;
+		case Keys::A: case Keys::Left:    return ETecla::izquierda;
+		case Keys::D: case Keys::Right:   return ETecla::derecha;
+		case Keys::Space:                 return ETecla::disparo;
+		case Keys::Enter:                 return ETecla::aceptar;
+		case Keys::Escape: case Keys::Back: return ETecla::volver;
+		default:                          return ETecla::ninguna;
 		}
 	}
 	};

@@ -5,13 +5,15 @@
 using namespace System::Drawing;
 
 class CMapa {
-  CBloque* mapa[MAX_FILAS][MAX_COLUMNAS];
-  int nivel;
-  ETipoPiso tipoPiso;
+	CBloque* mapa[MAX_FILAS][MAX_COLUMNAS];
+	int nivel;
+	ETipoPiso tipoPiso;
 
-  public:
+public:
 	CMapa();
-	void setNivel(int nivel);	
+	~CMapa();
+	void cargarNivel(int nivel, ETipoPiso PisoDeseado);   // elige nivel1..nivel5 segun el numero
+	void setNivel(int nivel);
 	int getNivel();
 	CBloque* getBloque(int i, int j);
 	CBloque* (*CMapa::getMapa())[MAX_COLUMNAS];
@@ -19,7 +21,7 @@ class CMapa {
 	void nivel2(ETipoPiso PisoDeseado);
 	void nivel3(ETipoPiso PisoDeseado);
 	void nivel4(ETipoPiso PisoDeseado);
-	void nivel5(ETipoPiso PisoDeseado);	
+	void nivel5(ETipoPiso PisoDeseado);
 	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD);
 };
 

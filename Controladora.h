@@ -20,11 +20,13 @@ private:
 	Colision* cadenaJugador;
 	Colision* cadenaEnemigos;
 	CPanelHUD* hud;
+	bool derrota = false;            // se destruyo el trofeo o el jugador se quedo sin vidas
 public:
 	CControladora();
 	~CControladora();
 
-	void Inicializar();
+	void Inicializar(int nivel);      // arma la partida del nivel indicado (1 a 5)
+	bool haPerdido();
 	void DibujarMapa(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques, Bitmap^ bmpTrofeo, Bitmap^ bmpTrofeoD);
 	void DibujarTanques(Graphics^ g, Bitmap^ bmpTanques);
 	void setDireccion(EDireccion direccion);
