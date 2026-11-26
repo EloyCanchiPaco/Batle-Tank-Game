@@ -149,9 +149,10 @@ void CColeccionEnemigos::setColision(Colision* cadena, ContextoColision* context
     this->contexto = contexto;
 }
 
-void CColeccionEnemigos::iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador) {
+void CColeccionEnemigos::iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador,int total) {
     ETipoTanque tipos[] = { tipo1, tipo2, tipo3, tipo4, tipo5 };
-    int totales[] = { 11, 12, 15, 18, 20 };        // enemigos EN TOTAL por nivel: aqui se edita
+    int totales[] = { 10, 12, 15, 18, 20 };        // enemigos EN TOTAL por nivel: aqui se edita
+	pendientes = total; // totales[nivel - 1];   // enemigos que faltan por aparecer
 
     this->mapa = mapa;
     this->filaJugador = filaJugador;
@@ -162,7 +163,7 @@ void CColeccionEnemigos::iniciarNivel(CMapa* mapa, int filaJugador, int columnaJ
     if (nivel < 1) nivel = 1;
     if (nivel > 5) nivel = 5;
     tipoNivel = tipos[nivel - 1];
-    pendientes = totales[nivel - 1];
+    pendientes = total;
     maxEnPantalla = 5;                             // maximo vivos a la vez
     espera = 0;
     ultimaVariante = 1;

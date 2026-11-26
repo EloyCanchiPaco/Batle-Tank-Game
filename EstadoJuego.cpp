@@ -82,6 +82,19 @@ void EstadoJugando::actualizar() {
 
 	juego->MoverEnemigos();
 	juego->ActualizarBalas();
+	// gano: tras una pausa pasa solo al siguiente nivel
+	if (juego->HaGanado()) {
+		if (++esperaFin >= 15) {                         // ~1,5 s de pausa
+			if (ctx->getNivel() < 5) {
+				ctx->setNivel(ctx->getNivel() + 1);
+				ctx->cambiarA(EEstado::jugando);         // carga el nivel siguiente
+			}
+			else {
+				ctx->cambiarA(EEstado::menu);            // termino el ultimo nivel
+			}
+		}
+		return;
+	}
 
 	// perdio: se deja correr un momento la escena y luego pasa a GAME OVER
 	if (juego->HaPerdido()) {

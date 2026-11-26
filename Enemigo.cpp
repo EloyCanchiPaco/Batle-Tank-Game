@@ -79,6 +79,8 @@ void CEnemigo::mover(CMapa* mapa) {
 	else if (atrofeo)         atrofeo->mover(this, mapa);
 	else if (mayorVelocidad)  mayorVelocidad->mover(this, mapa);
 	else if (combinada)  combinada->mover(this, mapa);
+	if (rand() % 30 == 0)           // disparo al azar, valido para todas las estrategias
+		disparar();
 }
 
 

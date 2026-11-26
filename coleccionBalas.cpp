@@ -32,7 +32,7 @@ void CColeccionBalas::explosionEnBala(CBala* b) {
 	if (y < 0) y = 0;
 	if (x > MAX_COLUMNAS * ANCHO_IMAGEN) x = MAX_COLUMNAS * ANCHO_IMAGEN;
 	if (y > MAX_FILAS * ALTO_IMAGEN) y = MAX_FILAS * ALTO_IMAGEN;
-	crearExplosion(x, y, false, TAM_IMPACTO);
+	crearExplosion(x, y, false, TAM_IMPACTO);      // igual para todas las balas
 }
 
 // Ladrillo: el primer impacto rompe la mitad por la que entra la bala (queda la opuesta);
@@ -75,9 +75,13 @@ static bool solapaRect(int x1, int y1, int w1, int h1, int x2, int y2, int w2, i
 }
 
 // true si la bala se superpone con el tanque
-static bool solapa(CBala* b, CTanque* t) {
+static const int MARGEN_JUGADOR = 10;   // pixeles de cada lado que no cuentan (sube el numero = mas dificil que te peguen)
+
+// margen = 0: celda completa (enemigos); margen > 0: hitbox reducido
+static bool solapa(CBala* b, CTanque* t, int margen) {
 	return solapaRect(b->getX(), b->getY(), CBala::TAM, CBala::TAM,
-		t->getX(), t->getY(), ANCHO_IMAGEN, ALTO_IMAGEN);
+		t->getX() + margen, t->getY() + margen,
+		ANCHO_IMAGEN - 2 * margen, ALTO_IMAGEN - 2 * margen);
 }
 //
 
@@ -94,6 +98,7 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 		int c1 = b->getX() / ANCHO_IMAGEN, c2 = (b->getX() + CBala::TAM - 1) / ANCHO_IMAGEN;
 		int f1 = b->getY() / ALTO_IMAGEN, f2 = (b->getY() + CBala::TAM - 1) / ALTO_IMAGEN;
 		if (b->getX() < 0 || b->getY() < 0 || c2 >= MAX_COLUMNAS || f2 >= MAX_FILAS) {
+			eventos.push_back(EEventoBala::ladrilloGolpeado);
 			explosionEnBala(b);
 			b->desactivar();
 		}
@@ -116,7 +121,9 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 						golpearLadrillo(bloque, b->getDireccion());
 						eventos.push_back(EEventoBala::ladrilloGolpeado);
 					}
-
+					else if (t == ETipoBloque::noDestruible) {
+						eventos.push_back(EEventoBala::ladrilloGolpeado);   // <- suena tambien
+					}
 					if (t == ETipoBloque::trofeo && bloque->getDurabilidad() > 0) {
 						bloque->setDurabilidad(0);
 						crearExplosion(c * ANCHO_IMAGEN + ANCHO_IMAGEN / 2, f * ALTO_IMAGEN + ALTO_IMAGEN / 2, true, TAM_TROFEO);
@@ -135,7 +142,7 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 			if (b->esDelJugador()) {
 				for (int k = 0; k < enemigos->getCantidad(); k++) {
 					CEnemigo* e = enemigos->getEnemigo(k);
-					if (solapa(b, e)) {
+					if (solapa(b, e,0)) {
 						e->setVidas(e->getVidas() - 1);
 						if (e->getVidas() <= 0) {
 							crearExplosion(e->getX() + ANCHO_IMAGEN / 2, e->getY() + ALTO_IMAGEN / 2, true, TAM_ENEMIGO);
@@ -151,7 +158,7 @@ void CColeccionBalas::actualizar(CMapa* mapa, CTanque* jugador, CColeccionEnemig
 					}
 				}
 			}
-			else if (solapa(b, jugador)) {
+			else if (solapa(b, jugador,MARGEN_JUGADOR)) {
 				jugador->setVidas(jugador->getVidas() - 1);
 				eventos.push_back(EEventoBala::jugadorGolpeado);
 				explosionEnBala(b);

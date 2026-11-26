@@ -216,7 +216,7 @@ private:
 // =====================================================================
 //  Datos internos de CSonido
 // =====================================================================
-enum Orden { ORD_DISPARO, ORD_EXPLOSION, ORD_GOLPE };
+enum Orden { ORD_DISPARO, ORD_EXPLOSION, ORD_GOLPE , ORD_MENU };
 
 struct DatosSonido {
 	bool iniciado = false;
@@ -229,7 +229,7 @@ struct DatosSonido {
 	volatile bool terminar = false;
 
 	// efectos
-	CEfectoSonido efDisparo, efExplosion, efGolpe;
+	CEfectoSonido efDisparo, efExplosion, efGolpe, efMenu;
 
 	// sonidos en bucle
 	CBucleSonido motor;
@@ -266,6 +266,7 @@ static DWORD WINAPI hiloSonido(LPVOID param) {
 			case ORD_DISPARO:   d->efDisparo.reproducir(); break;
 			case ORD_EXPLOSION: d->efExplosion.reproducir(); break;
 			case ORD_GOLPE:     d->efGolpe.reproducir(); break;
+			case ORD_MENU:      d->efMenu.reproducir(); break;
 			}
 		}
 	}
@@ -301,6 +302,7 @@ void CSonido::iniciar() {
 	d->motor.setVolumen(d->volEfectos);
 	d->musica.setVolumen(d->volMusica);
 	d->musicaMenu.setVolumen(d->volMusica);
+	d->efMenu.setVolumen(d->volEfectos);
 
 	d->efDisparo.abrir("sonidos\\disparo.wav", 3);
 	d->efExplosion.abrir("sonidos\\explosion.wav", 3);
@@ -308,6 +310,8 @@ void CSonido::iniciar() {
 	d->motor.abrir("sonidos\\motor.wav");
 	d->musica.abrir("sonidos\\musica.wav");
 	d->musicaMenu.abrir("sonidos\\inicio.wav");
+	d->efMenu.abrir("sonidos\\menu.wav", 2);
+
 
 	d->iniciado = true;
 	d->hilo = CreateThread(NULL, 0, hiloSonido, d, 0, NULL);
@@ -331,11 +335,13 @@ void CSonido::cerrar() {
 	d->motor.cerrar();
 	d->musica.cerrar();
 	d->musicaMenu.cerrar();
+	d->efMenu.cerrar();
 }
 
 void CSonido::disparo() { encolar(d, ORD_DISPARO); }
 void CSonido::explosion() { encolar(d, ORD_EXPLOSION); }
 void CSonido::golpe() { encolar(d, ORD_GOLPE); }
+void CSonido::seleccion() { encolar(d, ORD_MENU); }
 
 void CSonido::motor(bool moviendose) {
 	if (!d->iniciado) return;
@@ -375,6 +381,7 @@ void CSonido::setVolumenEfectos(float v) {
 	d->efExplosion.setVolumen(d->volEfectos);
 	d->efGolpe.setVolumen(d->volEfectos);
 	d->motor.setVolumen(d->volEfectos);
+	d->efMenu.setVolumen(d->volEfectos);
 }
 
 float CSonido::getVolumenMusica() const { return d->volMusica; }

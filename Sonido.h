@@ -17,6 +17,7 @@ public:
 	void disparo();                        // se creo una bala
 	void explosion();                      // un enemigo o el trofeo destruido
 	void golpe();                          // impacto de una bala
+	void seleccion();                        // menu.wav: se selecciono una opcion del menu
 
 	// sonidos continuos
 	void motor(bool moviendose);           // mientras el jugador se mueve

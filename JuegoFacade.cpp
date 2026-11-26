@@ -17,7 +17,9 @@ void CJuegoFacade::Iniciar(int nivel) {
 bool CJuegoFacade::HaPerdido() {
 	return controladora != nullptr && controladora->haPerdido();
 }
-
+bool CJuegoFacade::HaGanado() {
+	return controladora != nullptr && controladora->haGanado();
+}
 // Una sola llamada dibuja mapa y tanques, en el orden correcto
 void CJuegoFacade::Dibujar(Graphics^ g, Bitmap^ bmpPiso, Bitmap^ bmpBloques,
 	Bitmap^ bmpTrofeo, Bitmap^ bmpTanques, Bitmap^ bmpBala, Bitmap^ bmpExplosion, Bitmap^ bmpTrofeoD) {

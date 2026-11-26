@@ -19,6 +19,7 @@ public:
 	void MoverEnemigos();
 	void Disparar();
 	void ActualizarBalas();
+	bool HaGanado();            // true si no quedan enemigos vivos ni pendientes
 
 
 };

@@ -12,7 +12,4 @@ void EstrategiaAleatoria::mover(CEnemigo* enemigo, CMapa* mapa) {
 	}
 	if (enemigo->puedeAvanzar())
 		enemigo->CTanque::mover();  // movimiento base de CTanque (usa direccion y velocidad)
-
-	if (rand() % 40 == 0)           // de vez en cuando dispara hacia donde mira
-		enemigo->disparar();
 }

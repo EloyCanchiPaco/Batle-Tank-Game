@@ -168,8 +168,8 @@ void EstadoMenu::ajustar(int delta) {
 void EstadoMenu::teclaPresionada(ETecla tecla) {
 	int n = cantidad();
 	switch (tecla) {
-	case ETecla::arriba:    cursor = (cursor + n - 1) % n; break;
-	case ETecla::abajo:     cursor = (cursor + 1) % n;     break;
+	case ETecla::arriba:    cursor = (cursor + n - 1) % n; CSonido::getInstancia().seleccion(); break;
+	case ETecla::abajo:     cursor = (cursor + 1) % n; CSonido::getInstancia().seleccion();    break;
 	case ETecla::izquierda: ajustar(-1); break;
 	case ETecla::derecha:   ajustar(+1); break;
 	case ETecla::aceptar:

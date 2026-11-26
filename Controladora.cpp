@@ -67,10 +67,10 @@ void CControladora::Inicializar(int nivel) {
 		ETipoPiso::pisoOscuro       // nivel 5
 	};
 	int indice = (nivel >= 1 && nivel <= 5) ? nivel - 1 : 0;   // evita salirse de la tabla
-
+	int totales[] = { 2, 14, 16, 18, 20 };
 	mapa->cargarNivel(nivel, pisos[indice]);
 	Enemigos->setColision(cadenaEnemigos, &contexto);
-	Enemigos->iniciarNivel(mapa, 12, 4, jugador);
+	Enemigos->iniciarNivel(mapa, 12, 4, jugador,totales[indice]);
 	EstadoPartida::getInstancia().nuevaPartida(mapa->getNivel(), jugador->getVidas(), Enemigos->getRestantes());
 	CSonido::getInstancia().musica(true);
 
@@ -162,6 +162,9 @@ void CControladora::actualizarEstado(int enemigosAntes) {
 
 bool CControladora::haPerdido() {
 	return derrota;
+}
+bool CControladora::haGanado() {
+	return !derrota && Enemigos->getRestantes() == 0;
 }
 
 void CControladora::DibujarBalas(Graphics^ g, Bitmap^ bmpBala, Bitmap^ bmpExplosion) {

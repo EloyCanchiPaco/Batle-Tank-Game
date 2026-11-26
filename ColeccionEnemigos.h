@@ -36,6 +36,6 @@ public:
     void dibujar(Graphics^ g, Bitmap^ bmpTanques);
 
     void setColision(Colision* cadena, ContextoColision* contexto);
-    void iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador);
+    void iniciarNivel(CMapa* mapa, int filaJugador, int columnaJugador, CTanque* jugador,int total);
     void actualizarGeneracion();
 };
